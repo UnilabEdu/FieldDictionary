@@ -1,0 +1,133 @@
+:root {
+    /* colors */
+  
+    --color-light-blue: 197, 226, 255;
+    --color-light-blue-2: 143, 199, 255;
+    --color-blue: 6, 114, 221;
+    --color-blue-1: 81, 168, 255;
+    --color-blue-2: 0, 92, 184;
+  
+    --color-white: 253, 253, 253;
+    --color-black: 7, 7, 7;
+  
+    --color-gray: 119, 119, 119;
+    --color-gray-2: 237, 237, 237;
+  
+    --color-green: 19, 137, 0;
+    --color-red: 229, 0, 0;
+  }
+  
+  /* CSS reset: https://www.joshwcomeau.com/css/custom-css-reset/ */
+  
+  /*
+    1. Use a more-intuitive box-sizing model.
+  */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  /*
+    2. Remove default margin
+  */
+  * {
+    margin: 0;
+  }
+  /*
+    Typographic tweaks!
+    3. Add accessible line-height
+    4. Improve text rendering
+  */
+  body {
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  /*
+    5. Improve media defaults
+  */
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+  /*
+    6. Remove built-in form typography styles
+  */
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+  }
+  /*
+    7. Avoid text overflows
+  */
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    overflow-wrap: break-word;
+  }
+  /*
+    8. Create a root stacking context
+  */
+  #root,
+  #__next {
+    isolation: isolate;
+  }
+  
+  @font-face {
+    font-family: 'DejaVu Sans Condensed';
+    src: url('/static/fonts/dejavu-sans-condensed-webfont.eot'); /* IE9 Compat Modes */
+    src:
+      url('/static/fonts/dejavu-sans-condensed-webfont.eot?#iefix')
+        format('embedded-opentype'),
+      /* IE6-IE8 */ url('/static/fonts/dejavu-sans-condensed-webfont.woff2')
+        format('woff2'),
+      /* Super Modern Browsers */
+        url('/static/fonts/dejavu-sans-condensed-webfont.woff') format('woff'),
+      /* Pretty Modern Browsers */
+        url('/static/fonts/dejavu-sans-condensed-webfont.ttf') format('truetype');
+  }
+  
+  * {
+    color: rgb(var(--color-black));
+    font-family: 'DejaVu Sans Condensed', sans-serif;
+  }
+  
+  body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    background-color: rgb(var(--color-white));
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  button {
+    all: unset;
+    cursor: pointer;
+    box-sizing: border-box;
+  }
+  
+  select {
+    appearance: none;
+    /* safari */
+    -webkit-appearance: none;
+    /* other styles for aesthetics */
+    cursor: pointer;
+    background-color: rgb(var(--color-white));
+    outline: none;
+    border: none;
+  }
+  

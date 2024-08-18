@@ -1,0 +1,131 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}
+    ტერმინის შიდა გვერდი
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="main-outer edge-padding">
+      <main class="main-content width-limiter">
+        <article class="term-word-container">
+          <h1 class="term-word-detail">Archipelago - არქიპელაგი</h1>
+          <div class="term-field">
+            <a href="#">გეოგრაფია</a> &gt;
+            <a href="#">ფიზიკური გეოგრაფია</a> &gt;
+            <a href="#">კლიმატი</a>,
+            <a href="#">ეკოლოგია</a>
+          </div>
+          <div class="term-word-type">არსებითი სახელი</div>
+          <div class="term-qualifications">შესაბამისი კვალიფიკაცია</div>
+
+          <section class="term-source">
+            <h2>ტერმინის წყარო:</h2>
+            <p>
+              Smith, J. (2020). <a href="#!">The art of coding</a>. TechBooks
+              Publishing.
+            </p>
+          </section>
+          <section class="term-definition">
+            <h2>განმარტება:</h2>
+            <p>
+              შემთხვევითად გენერირებული ტექსტი ეხმარება დიზაინერებს და
+              ტიპოგრაფიული ნაწარმის შემქმნელებს, რეალურთან მაქსიმალურად
+              მიახლოებული შაბლონი წარუდგინონ შემფასებელს. ხშირადაა შემთხვევა,
+              როდესაც დიზაინის შესრულებისას საჩვენებელია, თუ როგორი იქნება
+              ტექსტის ბლოკი.
+            </p>
+          </section>
+          <section class="term-definition-source">
+            <h2>განმარტების წყარო:</h2>
+            <p>
+              Smith, J. (2020). <a href="#!">The art of coding</a>. TechBooks
+              Publishing.
+            </p>
+          </section>
+          <section class="term-type">
+            <h2>ტერმინის ტიპი:</h2>
+            <p>სლენგი</p>
+          </section>
+          <section class="term-context">
+            <h2>კონტექსტი:</h2>
+            <p>
+              შემთხვევითად გენერირებული ტექსტი ეხმარება დიზაინერებს და
+              ტიპოგრაფიული ნაწარმის შემქმნელებს, რეალურთან მაქსიმალურად
+              მიახლოებული შაბლონი წარუდგინონ შემფასებელს. ხშირადაა შემთხვევა,
+              როდესაც დიზაინის შესრულებისას საჩვენებელია, თუ როგორი იქნება
+              ტექსტის ბლოკი.
+            </p>
+          </section>
+          <section class="term-context-source">
+            <h2>კონტექსტის წყარო:</h2>
+            <p>
+              Smith, J. (2020). <a href="#!">The art of coding</a>. TechBooks
+              Publishing.
+            </p>
+          </section>
+          <section class="term-synonyms">
+            <h2>სინონიმები:</h2>
+            <ul>
+              <li><a href="#">სინონიმი 1,</a></li>
+              <li><a href="#">სინონიმი 2,</a></li>
+              <li><a href="#">სინონიმი 3,</a></li>
+            </ul>
+          </section>
+          <section class="term-related">
+            <h2>დაკავშირებული სიტყვები:</h2>
+            <ul>
+              <li><a href="#">სიტყვა 1</a></li>
+              <li><a href="#">სიტყვა 2</a></li>
+              <li><a href="#">სიტყვა 3</a></li>
+            </ul>
+          </section>
+          <section class="term-comment">
+            <h2>კომენტარი:</h2>
+            <p>
+              შემთხვევითად გენერირებული ტექსტი ეხმარება დიზაინერებს და
+              ტიპოგრაფიული ნაწარმის შემქმნელებს, რეალურთან მაქსიმალურად
+              მიახლოებული შაბლონი წარუდგინონ შემფასებელს. ხშირადაა შემთხვევა,
+              როდესაც დიზაინის შესრულებისას საჩვენებელია, თუ როგორი იქნება
+              ტექსტის ბლოკი.
+            </p>
+          </section>
+          <a class="go-back-button-container" href="{{ url_for('main.home') }}">
+            <button type="button" class="go-back-button">
+              <img src="{{ url_for('static', filename='images/' + 'go-back.svg') }}" alt="Go back" />
+            </button>
+            <span>უკან დაბრუნება</span>
+          </a>
+        </article>
+      </main>
+    </div>
+    
+
+
+
+
+
+    <dialog id="success-modal" class="info-modal">
+      <section class="info-modal-content">
+        <img src="{{ url_for('static', filename='images/' + 'success.svg') }}" alt="success tick" />
+        <p class="info-text">წარმატებით გამოიწერეთ სიახლეები</p>
+        <a class="base-button secondary-button" href="{{ url_for('main.home') }}">
+          მთავარ გვერდზე დაბრუნება
+        </a>
+      </section>
+    </dialog>
+    <dialog id="error-modal" class="info-modal">
+      <section class="info-modal-content">
+        <img src="{{ url_for('static', filename='images/' + 'error.svg') }}" alt="error" />
+        <p class="info-text">დაფიქსირდა შეცდომა</p>
+        <button
+          class="base-button secondary-button"
+          id="error-modal-close-button"
+        >
+          თავიდან ცდა
+        </button>
+      </section>
+    </dialog>
+
+{% endblock %}

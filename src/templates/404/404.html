@@ -1,0 +1,45 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}
+    შეცდომის გვერდი
+{% endblock %}
+
+
+{% block content %}
+    
+    <div class="main-outer edge-padding">
+      <main class="main-content width-limiter">
+        <section class="not-found-container">
+          <h1 class="not-found-title">გვერდი ვერ მოიძებნა</h1>
+          <a href="{{ url_for('main.home') }}" class="base-button secondary-button">
+            მთავარ გვერდზე დაბრუნება
+          </a>
+        </section>
+      </main>
+    </div>
+    
+
+    
+    <dialog id="success-modal" class="info-modal">
+      <section class="info-modal-content">
+        <img src="{{ url_for('static', filename='images/' + 'success.svg') }}" alt="success tick" />
+        <p class="info-text">წარმატებით გამოიწერეთ სიახლეები</p>
+        <a class="base-button secondary-button" href="{{ url_for('main.home') }}">
+          მთავარ გვერდზე დაბრუნება
+        </a>
+      </section>
+    </dialog>
+    <dialog id="error-modal" class="info-modal">
+      <section class="info-modal-content">
+        <img src="{{ url_for('static', filename='images/' + 'error.svg') }}" alt="error" />
+        <p class="info-text">დაფიქსირდა შეცდომა</p>
+        <button
+          class="base-button secondary-button"
+          id="error-modal-close-button"
+        >
+          თავიდან ცდა
+        </button>
+      </section>
+    </dialog>
+
+{% endblock %}
