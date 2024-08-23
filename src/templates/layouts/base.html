@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ka">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title%} {% endblock %}</title>
+    <link href="{{ url_for('static', filename='styles/global.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='styles/shared.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='styles/other.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='styles/main.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='styles/word.css') }}" rel="stylesheet" />
+  </head>
+  <body>
+
+    {% include 'layouts/navbar.html' %}
+
+    {% block content %}
+
+    {% endblock %}
+
+    {% include 'layouts/footer.html' %}
+
+
+    <!-- Include JavaScript files -->
+    <script src="{{ url_for('static', filename='scripts/term_list.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/dialogs.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/fields.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/filters.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/burger_menu.js') }}"></script>
+    
+  </body>
+</html>
