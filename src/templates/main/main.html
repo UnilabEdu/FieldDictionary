@@ -11,146 +11,9 @@
     <div class="main-outer edge-padding">
       <main class="main-content width-limiter">
         <section id="desktop-filters-content" class="filter-content">
-          <div class="filter-group">
-            <div class="select-container">
-              <select name="sorting" class="select base-field">
-                <option value="">სორტირება</option>
-                <option value="en">A-დან Z-მდე</option>
-                <option value="ka">ა-დან ჰ-მდე</option>
-                <option value="recent">ბოლოს დამატებული</option>
-              </select>
-              <img
-                class="select-arrow"
-                src="{{ url_for('static', filename='images/' + 'down.svg') }}"
-                alt="arrow"
-              />
-            </div>
-            <button
-              class="filter-icon-container vector-button reset-filters-button"
-              title="ფილტრების გასუფთავება"
-            >
-              <img src="{{ url_for('static', filename='images/' + 'retry.svg') }}" alt="reload" />
-            </button>
-          </div>
-          <div class="filter-group">
-            <input class="base-field" placeholder="აკრიფე ასო" />
-            <div
-              class="filter-icon-container filter-help"
-              title="ამ ველში ჩაწერილი ასოთი/ასოებით დაიწყება ტერმინები"
-            >
-              <img src="{{ url_for('static', filename='images/' + 'question.svg') }}" alt="arrow down" />
-            </div>
-          </div>
-          <ul class="checkbox-list level-1">
-            <div class="checkbox-group">
-              <div class="checkbox-container active">
-                <input id="science-checkbox-desktop" type="checkbox" />
-                <label for="science-checkbox-desktop">მეცნიერება</label>
-                <button class="vector-button">
-                  <img src="{{ url_for('static', filename='images/' + 'down.svg') }}" alt="arrow down" />
-                </button>
-              </div>
-              <ul class="checkbox-list level-2">
-                <div class="checkbox-group">
-                  <div class="checkbox-container">
-                    <input id="physics-checkbox-desktop" type="checkbox" />
-                    <label for="physics-checkbox-desktop">ფიზიკა</label>
-                    <button class="vector-button">
-                      <img src="{{ url_for('static', filename='images/' + 'down.svg') }}" alt="arrow down" />
-                    </button>
-                  </div>
-                </div>
-                <div class="checkbox-group">
-                  <div class="checkbox-container active">
-                    <input id="math-checkbox-desktop" type="checkbox" />
-                    <label for="math-checkbox-desktop">მათემატიკა</label>
-                    <button class="vector-button">
-                      <img src="{{ url_for('static', filename='images/' + 'down.svg') }}" alt="arrow down" />
-                    </button>
-                  </div>
-                  <ul class="checkbox-list level-3">
-                    <div class="checkbox-group">
-                      <div class="checkbox-container">
-                        <input id="algebra-checkbox" type="checkbox" />
-                        <label for="algebra-checkbox">ალგებრა</label>
-                      </div>
-                    </div>
-                    <div class="checkbox-group">
-                      <div class="checkbox-container">
-                        <input id="geometry-checkbox" type="checkbox" />
-                        <label for="geometry-checkbox">გეომეტრია</label>
-                      </div>
-                    </div>
-                  </ul>
-                </div>
-                <div class="checkbox-group">
-                  <div class="checkbox-container">
-                    <input id="chemistry-checkbox-desktop" type="checkbox" />
-                    <label for="chemistry-checkbox-desktop">ქიმია</label>
-                    <button class="vector-button">
-                      <img src="{{ url_for('static', filename='images/' + 'down.svg') }}" alt="arrow down" />
-                    </button>
-                  </div>
-                </div>
-                <div class="checkbox-group">
-                  <div class="checkbox-container">
-                    <input id="geography-checkbox-desktop" type="checkbox" />
-                    <label for="geography-checkbox-desktop">გეოგრაფია</label>
-                    <button class="vector-button">
-                      <img src="{{ url_for('static', filename='images/' + 'down.svg') }}" alt="arrow down" />
-                    </button>
-                  </div>
-                </div>
-              </ul>
-            </div>
-            <div class="checkbox-group">
-              <div class="checkbox-container">
-                <input id="tech-checkbox-desktop" type="checkbox" />
-                <label for="tech-checkbox-desktop">ტექნიკა</label>
-                <button class="vector-button">
-                  <img src="{{ url_for('static', filename='images/' + 'down.svg') }}" alt="arrow down" />
-                </button>
-              </div>
-            </div>
-            <div class="checkbox-group">
-              <div class="checkbox-container">
-                <input id="nature-checkbox-desktop" type="checkbox" />
-                <label for="nature-checkbox-desktop">ბუნება</label>
-                <button class="vector-button">
-                  <img src="{{ url_for('static', filename='images/' + 'down.svg') }}" alt="arrow down" />
-                </button>
-              </div>
-            </div>
-            <div class="checkbox-group">
-              <div class="checkbox-container">
-                <input id="literature-checkbox-desktop" type="checkbox" />
-                <label for="literature-checkbox-desktop">ლიტერატურა</label>
-                <button class="vector-button">
-                  <img src="{{ url_for('static', filename='images/' + 'down.svg') }}" alt="arrow down" />
-                </button>
-              </div>
-            </div>
-            <div class="checkbox-group">
-              <div class="checkbox-container">
-                <input id="fantasy-checkbox-desktop" type="checkbox" />
-                <label for="fantasy-checkbox-desktop">ფენტეზი</label>
-                <button class="vector-button">
-                  <img src="{{ url_for('static', filename='images/' + 'down.svg') }}" alt="arrow down" />
-                </button>
-              </div>
-            </div>
-            <div class="checkbox-group">
-              <div class="checkbox-container">
-                <input id="astrology-checkbox-desktop" type="checkbox" />
-                <label for="astrology-checkbox-desktop">ასტროლოგია</label>
-                <button class="vector-button">
-                  <img src="{{ url_for('static', filename='images/' + 'down.svg') }}" alt="arrow down" />
-                </button>
-              </div>
-            </div>
-          </ul>
-          <button class="base-button">ძებნა</button>
+          {% include 'main/filters_section.html' %}
         </section>
+          
         <section class="right-section">
           <section class="search-controls">
             <div class="search-input-container">
@@ -202,7 +65,16 @@
               </li>
             </ul>
           </section>
-          <section id="term-list"></section>
+
+
+          <section id="term-list">
+            {% for term in terms %}
+            <p><a href="{{ url_for('main.term_detail', term_id=term.id) }}">{{ term.geo_word}}-{{term.eng_word}}</a></p>
+            <hr>
+            {% endfor %}
+          </section>
+
+
           <div class="term-list-bottom-bar">
             <ul class="pagination">
               <li class="pagination-item">

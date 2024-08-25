@@ -353,6 +353,10 @@
   #desktop-filters-content {
     display: none;
   }
+
+  .hidden {
+    display: none;
+  }
   
   @media screen and (min-width: 768px) {
     .main-content {
