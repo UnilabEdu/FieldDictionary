@@ -1,0 +1,134 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}
+    ტერმინის შიდა გვერდი
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="main-outer edge-padding">
+      <main class="main-content width-limiter">
+        <article class="term-word-container">
+          <h1 class="term-word-detail">{{term.eng_word}} - {{ term.geo_word }}</h1>
+          <div class="term-field">
+            {% for category in term.category %}
+              {% set parent_category = category.parent %}
+              {% if parent_category %}
+                {% set grandparent_category = parent_category.parent %}
+                {% if grandparent_category %}
+                  <!-- Display grandparent category -->
+                  <a href="#">{{ grandparent_category.name }}</a> &gt;
+                {% endif %}
+                <!-- Display parent category -->
+                <a href="#">{{ parent_category.name }}</a> &gt;
+                
+              {% endif %}
+              <!-- Display current category -->
+              <a href="#">{{ category.name }}</a>    
+            {% endfor %}
+          </div>
+          <div class="term-word-type">{{term.grammar_form}}</div>
+          <div class="term-qualifications">შესაბამისი კვალიფიკაცია</div>
+
+          <section class="term-source">
+            <h2>ტერმინის წყარო:</h2>
+            <p>
+              {{term.term_source}}
+            </p>
+          </section>
+          <section class="term-definition">
+            <h2>განმარტება:</h2>
+            <p>
+              {{term.definition}}
+            </p>
+          </section>
+          <section class="term-definition-source">
+            <h2>განმარტების წყარო:</h2>
+            <p>
+              {{term.definition_source}}
+            </p>
+          </section>
+          <section class="term-type">
+            <h2>ტერმინის ტიპი:</h2>
+            <p>{{term.term_type}}</p>
+          </section>
+          <section class="term-context">
+            <h2>კონტექსტი:</h2>
+            <p>
+              {{term.context}}
+            </p>
+          </section>
+          <section class="term-context-source">
+            <h2>კონტექსტის წყარო:</h2>
+            <p>
+              {{term.context_source}}
+            </p>
+          </section>
+          <section class="term-synonyms">
+            <h2>სინონიმები:</h2>
+            {% if synonyms %}
+            <ul>
+                {% for synonym in synonyms %}
+                    {% set related_term = synonym.term1 if synonym.term2.id == term.id else synonym.term2 %}
+                    <li><a href="{{ url_for('main.term_detail', term_id=related_term.id) }}">{{ related_term.geo_word }}</a></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+           
+          </section>
+          <section class="term-related">
+            <h2>დაკავშირებული სიტყვები:</h2>
+            {% if connected_terms %}
+            <ul>
+                {% for connected_term in connected_terms %}
+                  {% set related_term = connected_term.term1 if connected_term.term2.id == term.id else connected_term.term2 %}
+                  <li><a href="{{ url_for('main.term_detail', term_id=related_term.id) }}">{{ related_term.geo_word }}</a></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+          </section>
+          <section class="term-comment">
+            <h2>კომენტარი:</h2>
+            <p>
+              {{term.comment}}
+            </p>
+          </section>
+          <a class="go-back-button-container" href="{{ url_for('main.home') }}">
+            <button type="button" class="go-back-button">
+              <img src="{{ url_for('static', filename='images/' + 'go-back.svg') }}" alt="Go back" />
+            </button>
+            <span>უკან დაბრუნება</span>
+          </a>
+        </article>
+      </main>
+    </div>
+    
+
+
+
+
+
+    <dialog id="success-modal" class="info-modal">
+      <section class="info-modal-content">
+        <img src="{{ url_for('static', filename='images/' + 'success.svg') }}" alt="success tick" />
+        <p class="info-text">წარმატებით გამოიწერეთ სიახლეები</p>
+        <a class="base-button secondary-button" href="{{ url_for('main.home') }}">
+          მთავარ გვერდზე დაბრუნება
+        </a>
+      </section>
+    </dialog>
+    <dialog id="error-modal" class="info-modal">
+      <section class="info-modal-content">
+        <img src="{{ url_for('static', filename='images/' + 'error.svg') }}" alt="error" />
+        <p class="info-text">დაფიქსირდა შეცდომა</p>
+        <button
+          class="base-button secondary-button"
+          id="error-modal-close-button"
+        >
+          თავიდან ცდა
+        </button>
+      </section>
+    </dialog>
+
+{% endblock %}

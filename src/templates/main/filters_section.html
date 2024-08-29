@@ -1,0 +1,44 @@
+<ul class="checkbox-list level-1">
+    {% for category in root_categories %}
+      <div class="checkbox-group">
+        <div class="checkbox-container">
+          <input id="category-checkbox-{{ category.id }}" type="checkbox" />
+          <label for="category-checkbox-{{ category.id }}">{{ category.name }}</label>
+          <button class="vector-button toggle-button" data-target="subcategories-{{ category.id }}" data-down-arrow-url="{{ url_for('static', filename='images/down.svg') }}">
+            <img src="{{ url_for('static', filename='images/' + 'down.svg') }}" alt="arrow down" />
+          </button>
+        </div>
+      </div>
+  
+      {% if category.subcategories %}
+        <ul id="subcategories-{{ category.id }}" class="checkbox-list level-2 hidden">
+          {% for child in category.subcategories %}
+            <div class="checkbox-group">
+              <div class="checkbox-container">
+                <input id="child-checkbox-{{ child.id }}" type="checkbox" />
+                <label for="child-checkbox-{{ child.id }}">{{ child.name }}</label>
+                <button class="vector-button toggle-button" data-target="subcategories-{{ child.id }}" data-down-arrow-url="{{ url_for('static', filename='images/down.svg') }}">
+                  <img src="{{ url_for('static', filename='images/' + 'down.svg') }}" alt="arrow down" />
+                </button>
+              </div>
+            </div>
+            {% if child.subcategories %}
+              <ul id="subcategories-{{ child.id }}" class="checkbox-list level-3 hidden">
+                {% for subcategory in child.subcategories %}
+                  <div class="checkbox-group">
+                    <div class="checkbox-container">
+                      <input id="subcategory-checkbox-{{ subcategory.id }}" type="checkbox" />
+                      <label for="subcategory-checkbox-{{ subcategory.id }}">{{ subcategory.name }}</label>
+                    </div>
+                  </div>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endfor %}
+  </ul>
+  
+  <button class="base-button">ძებნა</button>
+  
