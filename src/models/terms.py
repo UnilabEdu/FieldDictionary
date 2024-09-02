@@ -19,8 +19,8 @@ class Term(BaseModel):
     comment = db.Column(db.Text, nullable=True)
 
     category = db.relationship("Category", secondary="terms_categories", backref="terms")
+    
 
-   
     def __repr__(self):
         return f"Term('{self.eng_word}'-'{self.geo_word}')"
 
@@ -51,8 +51,18 @@ class Category(BaseModel):
     name = db.Column(db.String(50), nullable=False)
     parent_id = db.Column(db.Integer, db.ForeignKey("categories.id"), nullable=True)
 
-    # Relationship to self
-    parent = db.relationship("Category", remote_side=[id], backref="subcategories")
+    
+    # Establish the relationship between parent and child categories
+    children = db.relationship('Category', backref=db.backref('parent', remote_side=[id]), lazy='dynamic')
+
+
+    def get_descendants(self):
+        descendants = []
+        for child in self.children:
+            descendants.append(child)
+            descendants.extend(child.get_descendants())
+        return descendants
+
 
     def __repr__(self):
         return self.name

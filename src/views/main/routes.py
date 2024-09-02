@@ -50,3 +50,23 @@ def term_detail(term_id):
     ).all()
     
     return render_template("main/term_detail.html", term=term, connected_terms=connected_terms, synonyms=synonyms)
+
+
+
+
+@main_blueprint.route('/categories/<int:category_id>/terms')
+def view_terms_by_category(category_id):
+    # Get the selected category by ID
+    category = Category.query.get_or_404(category_id)
+
+    # Get all descendant categories including the current category
+    descendant_categories = [category] + category.get_descendants()
+
+    # Fetch all terms that belong to the selected category or any of its descendants
+    terms = Term.query.filter(Term.category.any(Category.id.in_([c.id for c in descendant_categories]))).all()
+
+    # Render the template with the terms and category
+    return render_template('main/main.html', terms=terms, category=category)
+
+
+

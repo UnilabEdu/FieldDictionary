@@ -18,14 +18,14 @@
                 {% set grandparent_category = parent_category.parent %}
                 {% if grandparent_category %}
                   <!-- Display grandparent category -->
-                  <a href="#">{{ grandparent_category.name }}</a> &gt;
+                  <a href="{{ url_for('main.view_terms_by_category', category_id=grandparent_category.id) }}">{{ grandparent_category.name }}</a> &gt;
                 {% endif %}
                 <!-- Display parent category -->
-                <a href="#">{{ parent_category.name }}</a> &gt;
+                <a href="{{ url_for('main.view_terms_by_category', category_id=parent_category.id) }}">{{ parent_category.name }}</a> &gt;
                 
               {% endif %}
               <!-- Display current category -->
-              <a href="#">{{ category.name }}</a>    
+              <a href="{{ url_for('main.view_terms_by_category', category_id=category.id) }}">{{ category.name }}</a>    
             {% endfor %}
           </div>
           <div class="term-word-type">{{term.grammar_form}}</div>
@@ -35,6 +35,7 @@
             <h2>ტერმინის წყარო:</h2>
             <p>
               {{term.term_source}}
+              Smith, J. (2020). <a href="{{term.term_source}}" previewlistener="true">The art of coding</a>. TechBooks Publishing.
             </p>
           </section>
           <section class="term-definition">
@@ -46,7 +47,7 @@
           <section class="term-definition-source">
             <h2>განმარტების წყარო:</h2>
             <p>
-              {{term.definition_source}}
+              Smith, J. (2020). <a href="{{term.definition_source}}" previewlistener="true">The art of coding</a>. TechBooks Publishing.
             </p>
           </section>
           <section class="term-type">
@@ -62,7 +63,7 @@
           <section class="term-context-source">
             <h2>კონტექსტის წყარო:</h2>
             <p>
-              {{term.context_source}}
+              Smith, J. (2020). <a href="{{term.context_source}}" previewlistener="true">The art of coding</a>. TechBooks Publishing.
             </p>
           </section>
           <section class="term-synonyms">

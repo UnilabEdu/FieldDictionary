@@ -46,24 +46,24 @@ def populate_db():
 
 
     term1 = Term(geo_word="არქიპელაგი", eng_word="Archipelago", grammar_form="არსებითი სახელი", 
-                 term_source="Smith, J. (2020). <a href='/'>The art of coding</a>. TechBooks Publishing.", 
+                 term_source="https://www.google.co.uk/", 
                  definition="შემთხვევითად გენერირებული ტექსტი ეხმარება დიზაინერებს და ტიპოგრაფიული ნაწარმის შემქმნელებს, რეალურთან მაქსიმალურად მიახლოებული შაბლონი წარუდგინონ შემფასებელს. ხშირადაა შემთხვევა, როდესაც დიზაინის შესრულებისას საჩვენებელია, თუ როგორი იქნება ტექსტის ბლოკი. სწორედ ასეთ დროს არის მოსახერხებელი ამ გენერატორით შექმნილი ტექსტის გამოყენება, რადგან უბრალოდ „ტექსტი ტექსტი ტექსტი“ ან სხვა გამეორებადი სიტყვების ჩაყრა, ხელოვნურ ვიზუალურ სიმეტრიას ქმნის და არაბუნებრივად გამოიყურება.", 
-                 definition_source="Smith, J. (2020). <a href='/'>The art of coding</a>. TechBooks Publishing.", term_type="სლენგი", 
-                 context="ეს არის კონტექსტი", context_source="Smith, J. (2020). <a href='/'>The art of coding</a>. TechBooks Publishing.", 
+                 definition_source="https://www.google.co.uk/", term_type="სლენგი", 
+                 context="ეს არის კონტექსტი", context_source="https://www.google.co.uk/", 
                  comment="ეს არის კომენტარი", category=[category6,])
 
     term2 = Term(geo_word="ქართული სიტყვა", eng_word="English word", grammar_form="ზმნა", 
-                 term_source="Smith, J. (2020). <a href='/'>The art of coding</a>. TechBooks Publishing.", 
+                 term_source="https://www.google.co.uk/", 
                  definition="შემთხვევითად გენერირებული ტექსტი ეხმარება დიზაინერებს და ტიპოგრაფიული ნაწარმის შემქმნელებს, რეალურთან მაქსიმალურად მიახლოებული შაბლონი წარუდგინონ შემფასებელს. ხშირადაა შემთხვევა, როდესაც დიზაინის შესრულებისას საჩვენებელია, თუ როგორი იქნება ტექსტის ბლოკი. სწორედ ასეთ დროს არის მოსახერხებელი ამ გენერატორით შექმნილი ტექსტის გამოყენება, რადგან უბრალოდ „ტექსტი ტექსტი ტექსტი“ ან სხვა გამეორებადი სიტყვების ჩაყრა, ხელოვნურ ვიზუალურ სიმეტრიას ქმნის და არაბუნებრივად გამოიყურება.", 
-                 definition_source="Smith, J. (2020). <a href='/'>The art of coding</a>. TechBooks Publishing.", 
-                 context="ეს არის კონტექსტი", context_source="Smith, J. (2020). <a href='/'>The art of coding</a>. TechBooks Publishing.", 
+                 definition_source="https://www.google.co.uk/", 
+                 context="ეს არის კონტექსტი", context_source="https://www.google.co.uk/", 
                  comment="ეს არის კომენტარი", category=[category7])
     
     term3 = Term(geo_word="Example", eng_word="მაგალითი", grammar_form="ზმნა", 
-                 term_source="Smith, J. (2020). <a href='/'>The art of coding</a>. TechBooks Publishing.", 
+                 term_source="https://www.google.co.uk/", 
                  definition="შემთხვევითად გენერირებული ტექსტი ეხმარება დიზაინერებს და ტიპოგრაფიული ნაწარმის შემქმნელებს, რეალურთან მაქსიმალურად მიახლოებული შაბლონი წარუდგინონ შემფასებელს. ხშირადაა შემთხვევა, როდესაც დიზაინის შესრულებისას საჩვენებელია, თუ როგორი იქნება ტექსტის ბლოკი. სწორედ ასეთ დროს არის მოსახერხებელი ამ გენერატორით შექმნილი ტექსტის გამოყენება, რადგან უბრალოდ „ტექსტი ტექსტი ტექსტი“ ან სხვა გამეორებადი სიტყვების ჩაყრა, ხელოვნურ ვიზუალურ სიმეტრიას ქმნის და არაბუნებრივად გამოიყურება.", 
-                 definition_source="Smith, J. (2020). <a href='/'>The art of coding</a>. TechBooks Publishing.", 
-                 context="ეს არის კონტექსტი", context_source="Smith, J. (2020). <a href='/'>The art of coding</a>. TechBooks Publishing.", 
+                 definition_source="https://www.google.co.uk/", 
+                 context="ეს არის კონტექსტი", context_source="https://www.google.co.uk/", 
                  comment="ეს არის კომენტარი", category=[category7])
     
     term1.create()
