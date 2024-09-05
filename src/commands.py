@@ -2,7 +2,7 @@ from flask.cli import with_appcontext
 import click
 
 from src.extensions import db
-from src.models import Term, TermCategory, Category, ConnectedTerm
+from src.models import Term, TermCategory, Category, ConnectedTerm, User
 
 
 
@@ -80,5 +80,14 @@ def populate_db():
     connected_term.create()
     connected_term2.create()
     click.echo("Created connected terms!")
+
+
+
+    click.echo("Creating admin user...")
+    admin = User(username="admin", password="admin123", email="testuser@gmail.com")
+
+    admin.create()
+    click.echo("Created admin user!")
+
 
     click.echo("Database populated!")

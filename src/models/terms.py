@@ -22,7 +22,7 @@ class Term(BaseModel):
     
 
     def __repr__(self):
-        return f"Term('{self.eng_word}'-'{self.geo_word}')"
+        return f"({self.eng_word} - {self.geo_word})"
 
 
 
@@ -30,8 +30,8 @@ class ConnectedTerm(BaseModel):
     __tablename__ = "connected_terms"
 
     id = db.Column(db.Integer, primary_key=True)
-    term1_id = db.Column(db.Integer, db.ForeignKey('terms.id'), nullable=False)
-    term2_id = db.Column(db.Integer, db.ForeignKey('terms.id'), nullable=False)
+    term1_id = db.Column(db.Integer, db.ForeignKey('terms.id'), nullable=True)
+    term2_id = db.Column(db.Integer, db.ForeignKey('terms.id'), nullable=True)
     is_synonym = db.Column(db.Boolean, nullable=False)
 
     term1 = db.relationship('Term', foreign_keys=[term1_id], backref='term1_connections')
