@@ -1,6 +1,8 @@
-from flask import render_template, Blueprint
+from flask import render_template, Blueprint, redirect, url_for, request
+from flask_login import login_user, logout_user
 
-from src.models import Term, ConnectedTerm, Category
+from src.models import Term, ConnectedTerm, Category, User
+from src.views.main.forms import LoginForm
 
 
 
@@ -50,3 +52,60 @@ def term_detail(term_id):
     ).all()
     
     return render_template("main/term_detail.html", term=term, connected_terms=connected_terms, synonyms=synonyms)
+
+
+
+
+@main_blueprint.route('/categories/<int:category_id>/terms')
+def view_terms_by_category(category_id):
+    # Get the selected category by ID
+    category = Category.query.get_or_404(category_id)
+
+    # Get all descendant categories including the current category
+    descendant_categories = [category] + category.get_descendants()
+
+    # Fetch all terms that belong to the selected category or any of its descendants
+    terms = Term.query.filter(Term.category.any(Category.id.in_([c.id for c in descendant_categories]))).all()
+
+    # Render the template with the terms and category
+    return render_template('main/main.html', terms=terms, category=category)
+
+
+
+
+@main_blueprint.route("/login", methods=["GET", "POST"])
+def login():
+    form = LoginForm()
+    error_message = None
+    if form.validate_on_submit():
+        user = User.query.filter(User.username == form.username.data).first()
+
+        if user is not None and user.check_password(form.password.data):
+            login_user(user)
+            next = request.args.get("next", None)
+            if next:
+                return redirect(next)
+            else:
+                return redirect(url_for("admin.index"))
+        else:
+            error_message = "Incorrect username or password! Please try again."
+
+    return render_template(
+        "main/login.html",
+        form=form,
+        error_message=error_message,
+    )
+
+
+@main_blueprint.route("/logout", methods=["GET", "POST"])
+def logout():
+    logout_user()
+    return redirect(url_for("main.login"))
+
+
+
+
+
+
+
+

@@ -1,10 +1,14 @@
 from flask import Flask
+from flask_admin.contrib.sqla import ModelView
 
 from src.config import Config
 from src.extensions import db, migrate, login_manager
 from src.views import main_blueprint
+from src.admin import admin
+from src.admin.term import TermView, ConnectedTermView
+from src.admin.user import UserView
 from src.commands import init_db, populate_db
-from src.models import User
+from src.models import User, Term, ConnectedTerm
 
 
 COMMANDS = [
@@ -38,6 +42,13 @@ def register_extensions(app):
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(user_id)
+    
+    # Flask-Admin
+    admin.init_app(app)
+    admin.add_view(TermView(Term, db.session, endpoint="term_panel", name="Terms"))
+    admin.add_view(ConnectedTermView(ConnectedTerm, db.session, endpoint="connected_term", name="Connected terms"))
+    admin.add_view(UserView(User, db.session))
+
 
 
 

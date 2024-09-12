@@ -19,10 +19,10 @@ class Term(BaseModel):
     comment = db.Column(db.Text, nullable=True)
 
     category = db.relationship("Category", secondary="terms_categories", backref="terms")
+    
 
-   
     def __repr__(self):
-        return f"Term('{self.eng_word}'-'{self.geo_word}')"
+        return f"({self.eng_word} - {self.geo_word})"
 
 
 
@@ -30,8 +30,8 @@ class ConnectedTerm(BaseModel):
     __tablename__ = "connected_terms"
 
     id = db.Column(db.Integer, primary_key=True)
-    term1_id = db.Column(db.Integer, db.ForeignKey('terms.id'), nullable=False)
-    term2_id = db.Column(db.Integer, db.ForeignKey('terms.id'), nullable=False)
+    term1_id = db.Column(db.Integer, db.ForeignKey('terms.id'), nullable=True)
+    term2_id = db.Column(db.Integer, db.ForeignKey('terms.id'), nullable=True)
     is_synonym = db.Column(db.Boolean, nullable=False)
 
     term1 = db.relationship('Term', foreign_keys=[term1_id], backref='term1_connections')
@@ -51,8 +51,18 @@ class Category(BaseModel):
     name = db.Column(db.String(50), nullable=False)
     parent_id = db.Column(db.Integer, db.ForeignKey("categories.id"), nullable=True)
 
-    # Relationship to self
-    parent = db.relationship("Category", remote_side=[id], backref="subcategories")
+    
+    # Establish the relationship between parent and child categories
+    children = db.relationship('Category', backref=db.backref('parent', remote_side=[id]), lazy='dynamic')
+
+
+    def get_descendants(self):
+        descendants = []
+        for child in self.children:
+            descendants.append(child)
+            descendants.extend(child.get_descendants())
+        return descendants
+
 
     def __repr__(self):
         return self.name
