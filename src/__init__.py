@@ -2,13 +2,13 @@ from flask import Flask
 from flask_admin.contrib.sqla import ModelView
 
 from src.config import Config
-from src.extensions import db, migrate, login_manager
+from src.extensions import db, migrate, login_manager, ckeditor
 from src.views import main_blueprint
 from src.admin import admin
-from src.admin.term import TermView, ConnectedTermView
+from src.admin.term import TermView, CategoryView
 from src.admin.user import UserView
 from src.commands import init_db, populate_db
-from src.models import User, Term, ConnectedTerm
+from src.models import User, Term, Category
 
 
 COMMANDS = [
@@ -19,6 +19,8 @@ COMMANDS = [
 def create_app():
     app = Flask(__name__, template_folder="templates")
     app.config.from_object(Config)
+    app.config['CKEDITOR_PKG_TYPE'] = 'basic'
+
 
     register_extensions(app)
     app.register_blueprint(main_blueprint)
@@ -39,6 +41,9 @@ def register_extensions(app):
     # Login-Manager
     login_manager.init_app(app)
 
+    # CKEditor
+    ckeditor.init_app(app)
+
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(user_id)
@@ -46,7 +51,7 @@ def register_extensions(app):
     # Flask-Admin
     admin.init_app(app)
     admin.add_view(TermView(Term, db.session, endpoint="term_panel", name="Terms"))
-    admin.add_view(ConnectedTermView(ConnectedTerm, db.session, endpoint="connected_term", name="Connected terms"))
+    admin.add_view(CategoryView(Category, db.session, endpoint="category", name="categories"))
     admin.add_view(UserView(User, db.session))
 
 

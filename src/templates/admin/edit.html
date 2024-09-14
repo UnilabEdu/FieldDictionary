@@ -1,0 +1,10 @@
+{% extends 'admin/model/edit.html' %}
+
+{% block tail %}
+    {{ super() }} <!-- Ensures other admin scripts are loaded -->
+    {{ ckeditor.load() }} <!-- Loads CKEditor scripts -->
+    
+    {{ ckeditor.config(name='context_source') }}
+    {{ ckeditor.config(name='term_source') }}
+    {{ ckeditor.config(name='definition_source') }}
+{% endblock %}
