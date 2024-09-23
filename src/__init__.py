@@ -16,6 +16,7 @@ COMMANDS = [
     populate_db
 ]
 
+
 def create_app():
     app = Flask(__name__, template_folder="templates")
     app.config.from_object(Config)
@@ -51,10 +52,8 @@ def register_extensions(app):
     # Flask-Admin
     admin.init_app(app)
     admin.add_view(TermView(Term, db.session, endpoint="term_panel", name="Terms"))
-    admin.add_view(CategoryView(Category, db.session, endpoint="category", name="categories"))
+    admin.add_view(CategoryView(Category, db.session, endpoint="category", name="Categories"))
     admin.add_view(UserView(User, db.session))
-
-
 
 
 def register_commands(app):
