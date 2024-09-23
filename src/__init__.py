@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_admin.contrib.sqla import ModelView
+from werkzeug import serving
 
 from src.config import Config
 from src.extensions import db, migrate, login_manager, ckeditor
@@ -9,7 +10,6 @@ from src.admin.term import TermView, CategoryView
 from src.admin.user import UserView
 from src.commands import init_db, populate_db
 from src.models import User, Term, Category
-
 
 COMMANDS = [
     init_db,
@@ -22,17 +22,15 @@ def create_app():
     app.config.from_object(Config)
     app.config['CKEDITOR_PKG_TYPE'] = 'basic'
 
-
     register_extensions(app)
     app.register_blueprint(main_blueprint)
     register_commands(app)
+    configure_logger()
 
     return app
 
 
-
 def register_extensions(app):
-
     # Flask-SQLAlchemy
     db.init_app(app)
 
@@ -61,3 +59,16 @@ def register_commands(app):
         app.cli.add_command(command)
 
 
+def configure_logger():
+    default_logger = serving.WSGIRequestHandler.log_request
+
+    def log_request(self, *args, **kwargs):
+        if str(args[0]) == '304':
+            return
+
+        if 'static' in self.path:
+            return
+
+        default_logger(self, *args, **kwargs)
+
+    serving.WSGIRequestHandler.log_request = log_request
