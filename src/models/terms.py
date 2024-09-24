@@ -1,6 +1,3 @@
-from sqlalchemy import or_, select
-from sqlalchemy.ext.hybrid import hybrid_property
-
 from src.extensions import db
 from src.models.base import BaseModel
 
@@ -38,6 +35,19 @@ class Term(BaseModel):
         related_terms = Term.query.filter(Term.id.in_(connected_term_ids)).all()
         return related_terms
 
+    def has_synonyms_or_relations(self):
+        connections = ConnectedTerm.query.filter((ConnectedTerm.term1_id == self.id) | (ConnectedTerm.term2_id == self.id)).first()
+        return connections != None
+
+    def get_category_tree(self):
+        category_trees = []
+        for category in self.category:
+            categories = category.get_parents()
+            categories.append(category)
+            category_trees.append(categories)
+        return category_trees
+
+
 
 class ConnectedTerm(BaseModel):
     __tablename__ = "connected_terms"
@@ -63,7 +73,7 @@ class Category(BaseModel):
     parent_id = db.Column(db.Integer, db.ForeignKey("categories.id"), nullable=True)
 
     # Establish the relationship between parent and child categories
-    children = db.relationship('Category', backref=db.backref('parent', remote_side=[id]), lazy='dynamic')
+    children = db.relationship('Category', backref=db.backref('parent', remote_side=[id]))
 
     def get_descendants(self):
         descendants = []
@@ -71,6 +81,13 @@ class Category(BaseModel):
             descendants.append(child)
             descendants.extend(child.get_descendants())
         return descendants
+
+    def get_parents(self):
+        parents = []
+        if self.parent:
+            parents.append(self.parent)
+            parents.extend(self.parent.get_parents())
+        return parents
 
     def __repr__(self):
         return self.name
