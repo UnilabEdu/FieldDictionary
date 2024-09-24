@@ -6,91 +6,91 @@
 
 
 {% block content %}
-  
-  <div class="main-outer edge-padding">
-    <main class="main-content width-limiter">
-      <form class="contact-form" id="contact-form">
-        <div class="input-group">
-          <label for="contact-name">სახელი</label>
-          <div class="base-field contact-field input-container errorable-field">
-            <input class="contact-input field-input" name="first_name" required />
-            <span>შეავსეთ ველი</span>
-          </div>
-        </div>
-        <div class="input-group">
-          <label for="contact-surname">გვარი</label>
-          <div class="base-field contact-field input-container errorable-field">
-            <input class="contact-input field-input" name="last_name" required />
-            <span>შეავსეთ ველი</span>
-          </div>
-        </div>
-        <div class="input-group">
-          <label for="contact-email">ელ. ფოსტა</label>
-          <div class="base-field contact-field input-container errorable-field">
-            <input class="contact-input field-input" name="email" type="email" required />
-            <span class="email-error">შეავსეთ ველი</span>
-          </div>
-        </div>
-        <div class="input-group">
-          <label for="contact-text">თემა/სათაური</label>
-          <div class="base-field contact-field input-container errorable-field">
-            <input class="contact-input field-input" name="subject" required />
-            <span>შეავსეთ ველი</span>
-          </div>
-        </div>
-        <div class="input-group">
-          <label for="contact-text">შეტყობინება/ტექსტი</label>
-          <div class="base-field contact-field input-container errorable-field">
-            <textarea id="contact-text" class="contact-input field-input" name="text" required></textarea>
-            <span>შეიყვანეთ შეტყობინება/ტექსტი</span>
-          </div>
-        </div>
-        <button class="base-button contact-submit" type="submit">
-          გაგზავნა
-        </button>
-      </form>
-    </main>
-  </div>
-  
+
+    <div class="main-outer edge-padding">
+        <main class="main-content width-limiter">
+            <form class="contact-form" id="contact-form">
+                <div class="input-group">
+                    <label for="contact-name">სახელი</label>
+                    <div class="base-field contact-field input-container errorable-field">
+                        <input class="contact-input field-input" name="first_name" required/>
+                        <span>შეავსეთ ველი</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="contact-surname">გვარი</label>
+                    <div class="base-field contact-field input-container errorable-field">
+                        <input class="contact-input field-input" name="last_name" required/>
+                        <span>შეავსეთ ველი</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="contact-email">ელ. ფოსტა</label>
+                    <div class="base-field contact-field input-container errorable-field">
+                        <input class="contact-input field-input" name="email" type="email" required/>
+                        <span class="email-error">შეავსეთ ველი</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="contact-text">თემა/სათაური</label>
+                    <div class="base-field contact-field input-container errorable-field">
+                        <input class="contact-input field-input" name="subject" required/>
+                        <span>შეავსეთ ველი</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="contact-text">შეტყობინება/ტექსტი</label>
+                    <div class="base-field contact-field input-container errorable-field">
+                        <textarea id="contact-text" class="contact-input field-input" name="text" required></textarea>
+                        <span>შეიყვანეთ შეტყობინება/ტექსტი</span>
+                    </div>
+                </div>
+                <button class="base-button contact-submit" type="submit">
+                    გაგზავნა
+                </button>
+            </form>
+        </main>
+    </div>
 
 
 
-  
-  <dialog id="success-modal" class="info-modal">
-    <section class="info-modal-content">
-      <img src="{{ url_for('static', filename='images/' + 'success.svg') }}" alt="success tick" />
-      <p class="info-text">წარმატებით გამოიწერეთ სიახლეები</p>
-      <a class="base-button secondary-button" href="{{ url_for('main.home') }}">
-        მთავარ გვერდზე დაბრუნება
-      </a>
-    </section>
-  </dialog>
-  <dialog id="error-modal" class="info-modal">
-    <section class="info-modal-content">
-      <img src="{{ url_for('static', filename='images/' + 'error.svg') }}" alt="error" />
-      <p class="info-text">დაფიქსირდა შეცდომა</p>
-      <button class="base-button secondary-button" id="error-modal-close-button">
-        თავიდან ცდა
-      </button>
-    </section>
-  </dialog>
-  <dialog id="success-modal-contact" class="info-modal">
-    <section class="info-modal-content">
-      <img src="{{ url_for('static', filename='images/' + 'success.svg') }}" alt="success tick" />
-      <p class="info-text">შეტყობინება წარმატებით გაიგზავნა</p>
-      <a class="base-button secondary-button" href="{{ url_for('main.home') }}">
-        მთავარ გვერდზე დაბრუნება
-      </a>
-    </section>
-  </dialog>
-  <dialog id="error-modal-contact" class="info-modal">
-    <section class="info-modal-content">
-      <img src="{{ url_for('static', filename='images/' + 'error.svg') }}" alt="error" />
-      <p class="info-text">შეტყობინების გაგზავნა ვერ მოხერხდა</p>
-      <button class="base-button secondary-button" id="error-modal-close-button-contact">
-        თავიდან ცდა
-      </button>
-    </section>
-  </dialog>
+
+
+    <dialog id="success-modal" class="info-modal">
+        <section class="info-modal-content">
+            <img src="{{ url_for('static', filename='images/' + 'success.svg') }}" alt="success tick"/>
+            <p class="info-text">წარმატებით გამოიწერეთ სიახლეები</p>
+            <a class="base-button secondary-button" href="{{ url_for('main.home') }}">
+                მთავარ გვერდზე დაბრუნება
+            </a>
+        </section>
+    </dialog>
+    <dialog id="error-modal" class="info-modal">
+        <section class="info-modal-content">
+            <img src="{{ url_for('static', filename='images/' + 'error.svg') }}" alt="error"/>
+            <p class="info-text">დაფიქსირდა შეცდომა</p>
+            <button class="base-button secondary-button" id="error-modal-close-button">
+                თავიდან ცდა
+            </button>
+        </section>
+    </dialog>
+    <dialog id="success-modal-contact" class="info-modal">
+        <section class="info-modal-content">
+            <img src="{{ url_for('static', filename='images/' + 'success.svg') }}" alt="success tick"/>
+            <p class="info-text">შეტყობინება წარმატებით გაიგზავნა</p>
+            <a class="base-button secondary-button" href="{{ url_for('main.home') }}">
+                მთავარ გვერდზე დაბრუნება
+            </a>
+        </section>
+    </dialog>
+    <dialog id="error-modal-contact" class="info-modal">
+        <section class="info-modal-content">
+            <img src="{{ url_for('static', filename='images/' + 'error.svg') }}" alt="error"/>
+            <p class="info-text">შეტყობინების გაგზავნა ვერ მოხერხდა</p>
+            <button class="base-button secondary-button" id="error-modal-close-button-contact">
+                თავიდან ცდა
+            </button>
+        </section>
+    </dialog>
 
 {% endblock %}
