@@ -1,0 +1,9 @@
+<dialog id="success-modal" class="info-modal">
+    <section class="info-modal-content">
+        <img src="{{ url_for('static', filename='images/' + 'success.svg') }}" alt="success tick"/>
+        <p class="info-text">წარმატებით გამოიწერეთ სიახლეები</p>
+        <a class="base-button secondary-button" href="{{ url_for('main.home') }}">
+            მთავარ გვერდზე დაბრუნება
+        </a>
+    </section>
+</dialog>

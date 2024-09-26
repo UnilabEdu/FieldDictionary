@@ -12,6 +12,7 @@
         <main class="main-content width-limiter">
             <section id="desktop-filters-content" class="filter-content">
                 {% include 'main/filters_section.html' %}
+                <button class="base-button">ძებნა</button>
             </section>
 
             <section class="right-section">
@@ -44,7 +45,7 @@
 
 
                 <section id="term-list">
-                     {% for term in terms.items %}
+                    {% for term in terms.items %}
                         <article class="term-card">
                             {% set category_trees = term.get_category_tree() %}
                             {% for tree in category_trees %}
@@ -198,7 +199,8 @@
                         </li>
                         {% for page in terms.iter_pages() %}
                             <li class="pagination-item">
-                                <a href="{{ url_for("main.home", page=page) }}" class="pagination-button active">{{ page }}</a>
+                                <a href="{{ url_for("main.home", page=page) }}"
+                                   class="pagination-button active">{{ page }}</a>
                             </li>
                         {% endfor %}
 
@@ -226,164 +228,10 @@
                 <img src="{{ url_for('static', filename='images/x.svg') }}" alt="close"/>
             </button>
             <section class="filter-content">
-                <div class="filter-group">
-                    <div class="select-container">
-                        <select name="sorting" class="select base-field">
-                            <option value="">სორტირება</option>
-                            <option value="en">A-დან Z-მდე</option>
-                            <option value="ka">ა-დან ჰ-მდე</option>
-                            <option value="recent">ბოლოს დამატებული</option>
-                        </select>
-                        <img class="select-arrow"
-                             src="{{ url_for('static', filename='images/down.svg') }}"
-                             alt="arrow"/>
-                    </div>
-                    <button class="filter-icon-container vector-button reset-filters-button"
-                            title="ფილტრების გასუფთავება">
-                        <img src="{{ url_for('static', filename='images/retry.svg') }}" alt="reload"/>
-                    </button>
-                </div>
-                <div class="filter-group">
-                    <input class="base-field" placeholder="აკრიფე ასო"/>
-                    <div class="filter-icon-container filter-help"
-                         title="ამ ველში ჩაწერილი ასოთი/ასოებით დაიწყება ტერმინები">
-                        <img src="{{ url_for('static', filename='images/question.svg') }}" alt="arrow down"/>
-                    </div>
-                </div>
-                <ul class="checkbox-list level-1">
-                    <div class="checkbox-group">
-                        <div class="checkbox-container active">
-                            <input id="science-checkbox" type="checkbox"/>
-                            <label for="science-checkbox">მეცნიერება</label>
-                            <button class="vector-button">
-                                <img src="{{ url_for('static', filename='images/down.svg') }}" alt="arrow down"/>
-                            </button>
-                        </div>
-                        <ul class="checkbox-list level-2">
-                            <div class="checkbox-group">
-                                <div class="checkbox-container">
-                                    <input id="physics-checkbox" type="checkbox"/>
-                                    <label for="physics-checkbox">ფიზიკა</label>
-                                    <button class="vector-button">
-                                        <img src="{{ url_for('static', filename='images/down.svg') }}"
-                                             alt="arrow down"/>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="checkbox-group">
-                                <div class="checkbox-container">
-                                    <input id="math-checkbox" type="checkbox"/>
-                                    <label for="math-checkbox">მათემატიკა</label>
-                                    <button class="vector-button">
-                                        <img src="{{ url_for('static', filename='images/down.svg') }}"
-                                             alt="arrow down"/>
-                                    </button>
-                                </div>
-                                <ul class="checkbox-list level-3">
-                                    <div class="checkbox-group">
-                                        <div class="checkbox-container">
-                                            <input id="algebra-checkbox" type="checkbox"/>
-                                            <label for="algebra-checkbox">ალგებრა</label>
-                                        </div>
-                                    </div>
-                                    <div class="checkbox-group">
-                                        <div class="checkbox-container">
-                                            <input id="geometry-checkbox" type="checkbox"/>
-                                            <label for="geometry-checkbox">გეომეტრია</label>
-                                        </div>
-                                    </div>
-                                </ul>
-                            </div>
-                            <div class="checkbox-group">
-                                <div class="checkbox-container">
-                                    <input id="chemistry-checkbox" type="checkbox"/>
-                                    <label for="chemistry-checkbox">ქიმია</label>
-                                    <button class="vector-button">
-                                        <img src="{{ url_for('static', filename='images/down.svg') }}"
-                                             alt="arrow down"/>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="checkbox-group">
-                                <div class="checkbox-container">
-                                    <input id="geography-checkbox" type="checkbox"/>
-                                    <label for="geography-checkbox">გეოგრაფია</label>
-                                    <button class="vector-button">
-                                        <img src="{{ url_for('static', filename='images/down.svg') }}"
-                                             alt="arrow down"/>
-                                    </button>
-                                </div>
-                            </div>
-                        </ul>
-                    </div>
-                    <div class="checkbox-group">
-                        <div class="checkbox-container">
-                            <input id="tech-checkbox" type="checkbox"/>
-                            <label for="tech-checkbox">ტექნიკა</label>
-                            <button class="vector-button">
-                                <img src="{{ url_for('static', filename='images/down.svg') }}" alt="arrow down"/>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="checkbox-group">
-                        <div class="checkbox-container">
-                            <input id="nature-checkbox" type="checkbox"/>
-                            <label for="nature-checkbox">ბუნება</label>
-                            <button class="vector-button">
-                                <img src="{{ url_for('static', filename='images/down.svg') }}" alt="arrow down"/>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="checkbox-group">
-                        <div class="checkbox-container">
-                            <input id="literature-checkbox" type="checkbox"/>
-                            <label for="literature-checkbox">ლიტერატურა</label>
-                            <button class="vector-button">
-                                <img src="{{ url_for('static', filename='images/down.svg') }}" alt="arrow down"/>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="checkbox-group">
-                        <div class="checkbox-container">
-                            <input id="fantasy-checkbox" type="checkbox"/>
-                            <label for="fantasy-checkbox">ფენტეზი</label>
-                            <button class="vector-button">
-                                <img src="{{ url_for('static', filename='images/down.svg') }}" alt="arrow down"/>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="checkbox-group">
-                        <div class="checkbox-container">
-                            <input id="astrology-checkbox" type="checkbox"/>
-                            <label for="astrology-checkbox">ასტროლოგია</label>
-                            <button class="vector-button">
-                                <img src="{{ url_for('static', filename='images/down.svg') }}" alt="arrow down"/>
-                            </button>
-                        </div>
-                    </div>
-                </ul>
+                {% include 'main/filters_section.html' %}
                 <button class="base-button modal-filter-button">ძებნა</button>
             </section>
         </div>
-    </dialog>
-    <dialog id="success-modal" class="info-modal">
-        <section class="info-modal-content">
-            <img src="{{ url_for('static', filename='images/' + 'success.svg') }}" alt="success tick"/>
-            <p class="info-text">წარმატებით გამოიწერეთ სიახლეები</p>
-            <a class="base-button secondary-button" href="{{ url_for('main.home') }}">
-                მთავარ გვერდზე დაბრუნება
-            </a>
-        </section>
-    </dialog>
-    <dialog id="error-modal" class="info-modal">
-        <section class="info-modal-content">
-            <img src="{{ url_for('static', filename='images/' + 'error.svg') }}" alt="error"/>
-            <p class="info-text">დაფიქსირდა შეცდომა</p>
-            <button class="base-button secondary-button"
-                    id="error-modal-close-button">
-                თავიდან ცდა
-            </button>
-        </section>
     </dialog>
 
 {% endblock %}
