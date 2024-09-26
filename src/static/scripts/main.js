@@ -24,3 +24,47 @@ for (let button of toggleAllButtons) {
         synonymElement.classList.toggle("active");
     })
 }
+
+let searchWord = document.getElementById("searchWord")
+let searchLetter = document.getElementById("searchLetter")
+let searchButton = document.getElementById("searchButton")
+let searchButton2 = document.getElementById("searchButton2")
+let sortType = document.getElementById("sortType")
+
+function search() {
+    let selectedCheckboxes = document.querySelectorAll("input:checked")
+    let url = new URL(window.location.origin)
+    if (searchWord.value != '') {
+        url.searchParams.set("searchWord", searchWord.value)
+    }
+
+    if (searchLetter.value != '') {
+        url.searchParams.set("searchLetter", searchLetter.value)
+    }
+    if (sortType.value != '') {
+        url.searchParams.set("sortType", sortType.value)
+    }
+
+    let categories = ""
+    for (let checkbox of selectedCheckboxes)
+        categories += `${checkbox.dataset.category},`
+
+    if (categories != '') {
+        url.searchParams.set("categories", categories)
+    }
+
+    window.location.href = url
+}
+
+searchButton.addEventListener("click", search)
+searchButton2.addEventListener("click", search)
+
+let categoryRemoveButtons = document.getElementsByClassName("selected-filter-remove-button")
+for (let button of categoryRemoveButtons) {
+    button.addEventListener("click", () => {
+        let url = decodeURIComponent(decodeURIComponent(window.location.href))
+        let matchedString = new RegExp(`\\b${button.dataset.category}\\b,`,"g")
+        url = url.replace(matchedString, "")
+        window.location.href = url
+    })
+}

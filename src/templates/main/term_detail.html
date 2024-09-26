@@ -16,7 +16,7 @@
                 {% for tree in category_trees %}
                     <div class="term-field">
                         {% for category in tree %}
-                            <a href="{{ url_for('main.view_terms_by_category', category_id=category.id) }}">
+                            <a href="{{ url_for('main.home', categories=category.id) }}">
                                 {{ category.name }}
                             </a>
                             {% if not loop.last %}

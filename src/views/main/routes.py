@@ -1,5 +1,6 @@
 from flask import render_template, Blueprint, redirect, url_for, request
 from flask_login import login_user, logout_user
+from urllib.parse import unquote
 
 from src.models import Term, ConnectedTerm, Category, User
 from src.views.main.forms import LoginForm
@@ -8,12 +9,40 @@ main_blueprint = Blueprint("main", __name__)
 
 
 @main_blueprint.route("/")
-def home():
+@main_blueprint.route("/page/<int:page>")
+def home(page=1):
     root_categories = Category.query.filter(Category.parent_id.is_(None)).all()
+    filtered_categories = []
+    terms = Term.query
+    search_word = request.args.get("searchWord", "")
+    if search_word:
+        terms = terms.filter(Term.geo_word.ilike(f"%{search_word}%") | Term.eng_word.ilike(f"%{search_word}%"))
 
-    page = request.args.get("page", type=int)
-    terms = Term.query.paginate(per_page=10, page=page)
-    return render_template("main/main.html", terms=terms, root_categories=root_categories)
+    search_letter = request.args.get("searchLetter", "")
+    if search_letter:
+        terms = terms.filter(Term.geo_word.ilike(f"{search_letter}%") | Term.eng_word.ilike(f"{search_letter}%"))
+
+    categories = request.args.get("categories")
+    if categories:
+        categories = unquote(categories).split(",")
+        terms = terms.join(Term.category).filter(Category.id.in_(categories))
+        filtered_categories = Category.query.filter(Category.id.in_(categories)).all()
+
+    sort = request.args.get("sortType")
+    if sort:
+        sort_map = {
+            "ka": Term.geo_word,
+            "en": Term.eng_word,
+            "recent": Term.id
+        }
+        terms = terms.order_by(sort_map[sort].desc())
+
+    print(search_letter, search_word, categories, sort)
+
+    terms = terms.paginate(per_page=10, page=page)
+    return render_template("main/main.html", terms=terms,
+                           root_categories=root_categories,filtered_categories=filtered_categories,
+                           search_word=search_word, search_letter=search_letter, sort=sort)
 
 
 @main_blueprint.route("/about")
@@ -46,21 +75,6 @@ def term_detail(term_id):
     ).all()
 
     return render_template("main/term_detail.html", term=term, connected_terms=connected_terms, synonyms=synonyms)
-
-
-@main_blueprint.route('/categories/<int:category_id>/terms')
-def view_terms_by_category(category_id):
-    # Get the selected category by ID
-    category = Category.query.get_or_404(category_id)
-
-    # Get all descendant categories including the current category
-    descendant_categories = [category] + category.get_descendants()
-
-    # Fetch all terms that belong to the selected category or any of its descendants
-    terms = Term.query.filter(Term.category.any(Category.id.in_([c.id for c in descendant_categories]))).all()
-
-    # Render the template with the terms and category
-    return render_template('main/main.html', terms=terms, category=category)
 
 
 @main_blueprint.route("/login", methods=["GET", "POST"])

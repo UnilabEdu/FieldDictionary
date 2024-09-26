@@ -7,20 +7,19 @@
 
 
 {% block content %}
-
     <div class="main-outer edge-padding">
         <main class="main-content width-limiter">
             <section id="desktop-filters-content" class="filter-content">
                 {% include 'main/filters_section.html' %}
-                <button class="base-button">ძებნა</button>
+                <button class="base-button" id="searchButton2">ძებნა</button>
             </section>
 
             <section class="right-section">
                 <section class="search-controls">
                     <div class="search-input-container">
-                        <input class="search-input" type="text" placeholder="ძიება"/>
-                        <a href="{{ url_for('main.term_not_found') }}">
-                            <button class="search-button">
+                        <input class="search-input" type="text" placeholder="ძიება" id="searchWord" value="{{ search_word }}"/>
+                        <a>
+                            <button class="search-button" id="searchButton">
                                 <img class="search-button-img"
                                      src="{{ url_for('static', filename='images/search.svg') }}"
                                      alt="search"/>
@@ -34,12 +33,14 @@
                     </button>
 
                     <ul class="selected-filter-list">
-                        <li class="selected-filter-item">
-                            ასტროლოგია
-                            <button class="selected-filter-remove-button vector-button">
-                                <img src="{{ url_for('static', filename='images/x.svg') }}"/>
-                            </button>
-                        </li>
+                        {% for category in filtered_categories %}
+                            <li class="selected-filter-item">
+                                {{ category.name }}
+                                <button class="selected-filter-remove-button vector-button" data-category="{{ category.id }}">
+                                    <img src="{{ url_for('static', filename='images/x.svg') }}"/>
+                                </button>
+                            </li>
+                        {% endfor %}
                     </ul>
                 </section>
 
@@ -51,7 +52,7 @@
                             {% for tree in category_trees %}
                                 <div class="field">
                                     {% for category in tree %}
-                                        <a href="{{ url_for('main.view_terms_by_category', category_id=category.id) }}">
+                                        <a href="{{ url_for('main.home', categories=category.id) }}">
                                             {{ category.name }}
                                         </a>
                                         {% if not loop.last %}
@@ -173,13 +174,13 @@
                         </article>
                     {% endfor %}
 
-                    <article class="term-card">
+                    <!--<article class="term-card">
                         <div class="pair-line">
                             <a href="/term-detail.html" class="unstyled-link">
                                 <h3 class="word-pair">Archipelago - არქიპელაგი</h3></a>
                             <span class="equivalent-word">(= <a href="/">კუნძული</a>)</span>
                         </div>
-                    </article>
+                    </article>-->
                 </section>
 
 
@@ -197,9 +198,10 @@
                                      alt="previous page"/>
                             </button>
                         </li>
+                        {% set query_string = request.query_string.decode() %}
                         {% for page in terms.iter_pages() %}
                             <li class="pagination-item">
-                                <a href="{{ url_for("main.home", page=page) }}"
+                                <a href="{{ url_for("main.home", page=page) }}?{{ query_string }}"
                                    class="pagination-button active">{{ page }}</a>
                             </li>
                         {% endfor %}

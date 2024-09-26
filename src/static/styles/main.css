@@ -372,7 +372,7 @@ a {
   top: 50%;
   left: 50%;
   transform: translateX(-50%) translateY(-110%);
-  content: url('/public/vectors/check.svg');
+  content: url('/static/images/check.svg');
   width: 15px;
   height: 11px;
   background-color: transparent;
