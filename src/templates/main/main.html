@@ -44,7 +44,7 @@
 
 
                 <section id="term-list">
-                    {% for term in terms %}
+                     {% for term in terms.items %}
                         <article class="term-card">
                             {% set category_trees = term.get_category_tree() %}
                             {% for tree in category_trees %}
@@ -185,46 +185,40 @@
                 <div class="term-list-bottom-bar">
                     <ul class="pagination">
                         <li class="pagination-item">
-                            <button class="pagination-button">
-                                <img src="{{ url_for('static', filename='images/' + 'double-left.svg') }}"
+                            <button class="pagination-button" {% if not terms.has_prev %} disabled {% endif %}>
+                                <img src="{{ url_for('static', filename='images/double-left.svg') }}"
                                      alt="first page"/>
                             </button>
                         </li>
                         <li class="pagination-item">
-                            <button class="pagination-button">
-                                <img src="{{ url_for('static', filename='images/' + 'left.svg') }}"
+                            <button class="pagination-button" {% if not terms.has_prev %} disabled {% endif %}>
+                                <img src="{{ url_for('static', filename='images/left.svg') }}"
                                      alt="previous page"/>
                             </button>
                         </li>
-                        <li class="pagination-item">
-                            <button class="pagination-button active">1</button>
-                        </li>
-                        <li class="pagination-item">
-                            <button class="pagination-button">2</button>
-                        </li>
-                        <li class="pagination-item">
-                            <button class="pagination-button">...</button>
-                        </li>
+                        {% for page in terms.iter_pages() %}
+                            <li class="pagination-item">
+                                <a href="{{ url_for("main.home", page=page) }}" class="pagination-button active">{{ page }}</a>
+                            </li>
+                        {% endfor %}
 
                         <li class="pagination-item">
-                            <button class="pagination-button">
+                            <button class="pagination-button" {% if not terms.has_next %} disabled {% endif %}>
                                 <img src="{{ url_for('static', filename='images/right.svg') }}" alt="next page"/>
                             </button>
                         </li>
                         <li class="pagination-item">
-                            <button class="pagination-button">
+                            <button class="pagination-button" {% if not terms.has_next %} disabled {% endif %}>
                                 <img src="{{ url_for('static', filename='images/double-right.svg') }}"
                                      alt="last page"/>
                             </button>
                         </li>
                     </ul>
-                    <span class="search-result-number">სულ დამატებულია N ტერმინი</span>
+                    <span class="search-result-number">სულ დამატებულია {{ terms.total }} ტერმინი</span>
                 </div>
             </section>
         </main>
     </div>
-
-
 
     <dialog id="filter-modal">
         <div class="filter-modal-content">
