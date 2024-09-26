@@ -1,0 +1,7 @@
+{% macro is_active(page) %}
+    {% if request.endpoint.endswith(page) %}
+        active-nav-link
+    {% else %}
+        nav-link
+    {% endif %}
+{% endmacro %}

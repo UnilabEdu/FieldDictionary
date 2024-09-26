@@ -11,8 +11,3 @@ filterContents.forEach((filterContent) => {
     checkboxes.forEach((checkbox) => (checkbox.checked = 0))
   })
 })
-
-
-// Example for debugging
-console.log('Filter Contents:', filterContents);
-console.log('Reset Button:', resetFiltersButton);

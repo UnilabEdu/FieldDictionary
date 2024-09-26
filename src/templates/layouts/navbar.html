@@ -1,14 +1,16 @@
+{% from "macros.html" import is_active %}
+
 <header class="header edge-padding">
     <div class="header-content width-limiter">
-      <a href="{{ url_for('main.home') }}">
-        <img class="logo" src="{{ url_for('static', filename='images/' + 'logo.svg') }}" alt="logo" />
-      </a>
-      <button id="menu-button" class="vector-button">
-        <img class="menu-img" src="{{ url_for('static', filename='images/' + 'burger.svg') }}" alt="menu" />
-      </button>
-      <nav class="desktop-nav">
-        <a href="{{ url_for('main.about') }}" class="nav-link">ლექსიკონის შესახებ</a>
-        <a href="{{ url_for('main.contact') }}" class="nav-link">კონტაქტი</a>
-      </nav>
+        <a href="{{ url_for('main.home') }}">
+            <img class="logo" src="{{ url_for('static', filename='images/' + 'logo.svg') }}" alt="logo"/>
+        </a>
+        <button id="menu-button" class="vector-button">
+            <img class="menu-img" src="{{ url_for('static', filename='images/' + 'burger.svg') }}" alt="menu"/>
+        </button>
+        <nav class="desktop-nav">
+            <a href="{{ url_for('main.about') }}" class="{{  is_active("about") }}">ლექსიკონის შესახებ</a>
+            <a href="{{ url_for('main.contact') }}" class="{{ is_active("contact") }}">კონტაქტი</a>
+        </nav>
     </div>
-  </header>
+</header>

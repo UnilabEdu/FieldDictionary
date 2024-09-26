@@ -1,3 +1,23 @@
+<div class="filter-group">
+    <div class="select-container">
+        <select name="sorting" class="select base-field">
+            <option value="">სორტირება</option>
+            <option value="en">A-დან Z-მდე</option>
+            <option value="ka">ა-დან ჰ-მდე</option>
+            <option value="recent">ბოლოს დამატებული</option>
+        </select>
+        <img class="select-arrow" src="{{ url_for('static', filename='images/down.svg') }}" alt="arrow"/>
+    </div>
+    <button class="filter-icon-container vector-button reset-filters-button" title="ფილტრების გასუფთავება">
+        <img src="{{ url_for('static', filename='images/retry.svg') }}" alt="reload"/>
+    </button>
+</div>
+<div class="filter-group">
+    <input class="base-field" placeholder="აკრიფე ასო"/>
+    <div class="filter-icon-container filter-help" title="ამ ველში ჩაწერილი ასოთი/ასოებით დაიწყება ტერმინები">
+        <img src="{{ url_for('static', filename='images/question.svg') }}" alt="arrow down"/>
+    </div>
+</div>
 <ul class="checkbox-list level-1">
     {% for category in root_categories %}
         <div class="checkbox-group">
