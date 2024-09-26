@@ -5,3 +5,22 @@
         nav-link
     {% endif %}
 {% endmacro %}
+
+{% macro get_subcategories(parent, level) %}
+    <ul class="checkbox-list level-{{ level }}">
+        {%- for subcategory in parent.children -%}
+            <div class="checkbox-group">
+                <div class="checkbox-container">
+                    <input id="category-checkbox-{{ subcategory.id }}" type="checkbox"/>
+                    <label for="category-checkbox-{{ subcategory.id }}">{{ subcategory.name }}</label>
+                    {% if subcategory.children %}
+                        <button class="vector-button toggle-button">
+                            <img src="{{ url_for('static', filename='images/down.svg') }}" alt="arrow down"/>
+                        </button>
+                    {% endif %}
+                </div>
+                {{ get_subcategories(subcategory, level + 1) }}
+            </div>
+        {%- endfor -%}
+    </ul>
+{% endmacro %}
