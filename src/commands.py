@@ -1,9 +1,9 @@
+from random import sample, randint
 from flask.cli import with_appcontext
 import click
 
 from src.extensions import db
 from src.models import Term, TermCategory, Category, ConnectedTerm, User
-
 
 
 @click.command("init_db")
@@ -13,8 +13,6 @@ def init_db():
     db.drop_all()
     db.create_all()
     click.echo("Database created!")
-
-
 
 
 @click.command("populate_db")
@@ -40,54 +38,30 @@ def populate_db():
 
     for category in categories:
         category.create()
-    
+
     click.echo("Created categories!")
+    for i in range(1, 50):
+        term = Term(geo_word=f"ქართული {i}", eng_word=f"English {i}", grammar_form="ზმნა", term_source="google.com",
+                    definition="შემთხვევითად გენერირებული ტექსტი ეხმარება დიზაინერებს და ტიპოგრაფიული ნაწარმის შემქმნელებს, "
+                               "რეალურთან მაქსიმალურად მიახლოებული შაბლონი წარუდგინონ შემფასებელს. ხშირადაა შემთხვევა, "
+                               "როდესაც დიზაინის შესრულებისას საჩვენებელია, თუ როგორი იქნება ტექსტის ბლოკი. სწორედ ასეთ დროს "
+                               "არის მოსახერხებელი ამ გენერატორით შექმნილი ტექსტის გამოყენება, რადგან უბრალოდ „ტექსტი ტექსტი "
+                               "ტექსტი“ ან სხვა გამეორებადი სიტყვების ჩაყრა, ხელოვნურ ვიზუალურ სიმეტრიას ქმნის და "
+                               "არაბუნებრივად გამოიყურება.",
+                    definition_source="google.com", term_type="სლენგი", context=f"ეს არის კონტექსტი {i}",
+                    context_source="google.com", comment="ეს არის კომენტარი", category=sample(categories, 1))
+        term.create()
 
-
-
-    term1 = Term(geo_word="არქიპელაგი", eng_word="Archipelago", grammar_form="არსებითი სახელი", 
-                 term_source="https://www.google.co.uk/", 
-                 definition="შემთხვევითად გენერირებული ტექსტი ეხმარება დიზაინერებს და ტიპოგრაფიული ნაწარმის შემქმნელებს, რეალურთან მაქსიმალურად მიახლოებული შაბლონი წარუდგინონ შემფასებელს. ხშირადაა შემთხვევა, როდესაც დიზაინის შესრულებისას საჩვენებელია, თუ როგორი იქნება ტექსტის ბლოკი. სწორედ ასეთ დროს არის მოსახერხებელი ამ გენერატორით შექმნილი ტექსტის გამოყენება, რადგან უბრალოდ „ტექსტი ტექსტი ტექსტი“ ან სხვა გამეორებადი სიტყვების ჩაყრა, ხელოვნურ ვიზუალურ სიმეტრიას ქმნის და არაბუნებრივად გამოიყურება.", 
-                 definition_source="https://www.google.co.uk/", term_type="სლენგი", 
-                 context="ეს არის კონტექსტი", context_source="https://www.google.co.uk/", 
-                 comment="ეს არის კომენტარი", category=[category6,])
-
-    term2 = Term(geo_word="ქართული სიტყვა", eng_word="English word", grammar_form="ზმნა", 
-                 term_source="https://www.google.co.uk/", 
-                 definition="შემთხვევითად გენერირებული ტექსტი ეხმარება დიზაინერებს და ტიპოგრაფიული ნაწარმის შემქმნელებს, რეალურთან მაქსიმალურად მიახლოებული შაბლონი წარუდგინონ შემფასებელს. ხშირადაა შემთხვევა, როდესაც დიზაინის შესრულებისას საჩვენებელია, თუ როგორი იქნება ტექსტის ბლოკი. სწორედ ასეთ დროს არის მოსახერხებელი ამ გენერატორით შექმნილი ტექსტის გამოყენება, რადგან უბრალოდ „ტექსტი ტექსტი ტექსტი“ ან სხვა გამეორებადი სიტყვების ჩაყრა, ხელოვნურ ვიზუალურ სიმეტრიას ქმნის და არაბუნებრივად გამოიყურება.", 
-                 definition_source="https://www.google.co.uk/", 
-                 context="ეს არის კონტექსტი", context_source="https://www.google.co.uk/", 
-                 comment="ეს არის კომენტარი", category=[category7])
-    
-    term3 = Term(geo_word="Example", eng_word="მაგალითი", grammar_form="ზმნა", 
-                 term_source="https://www.google.co.uk/", 
-                 definition="შემთხვევითად გენერირებული ტექსტი ეხმარება დიზაინერებს და ტიპოგრაფიული ნაწარმის შემქმნელებს, რეალურთან მაქსიმალურად მიახლოებული შაბლონი წარუდგინონ შემფასებელს. ხშირადაა შემთხვევა, როდესაც დიზაინის შესრულებისას საჩვენებელია, თუ როგორი იქნება ტექსტის ბლოკი. სწორედ ასეთ დროს არის მოსახერხებელი ამ გენერატორით შექმნილი ტექსტის გამოყენება, რადგან უბრალოდ „ტექსტი ტექსტი ტექსტი“ ან სხვა გამეორებადი სიტყვების ჩაყრა, ხელოვნურ ვიზუალურ სიმეტრიას ქმნის და არაბუნებრივად გამოიყურება.", 
-                 definition_source="https://www.google.co.uk/", 
-                 context="ეს არის კონტექსტი", context_source="https://www.google.co.uk/", 
-                 comment="ეს არის კომენტარი", category=[category7])
-    
-    term1.create()
-    term2.create()
-    term3.create()
     click.echo("Created terms!")
-    
-
-
-    # Connect terms using the ConnectedTerm model
-    connected_term = ConnectedTerm(term1_id=term1.id, term2_id=term2.id, is_synonym=True)
-    connected_term2 = ConnectedTerm(term1_id=term1.id, term2_id=term3.id, is_synonym=False)
-    
-    connected_term.create()
-    connected_term2.create()
+    for i in range(1, 10):
+        connected_term = ConnectedTerm(term1_id=i, term2_id=randint(11, 50), is_synonym=randint(0, 1))
+        connected_term.create()
     click.echo("Created connected terms!")
-
-
 
     click.echo("Creating admin user...")
     admin = User(username="admin", password="admin123", email="testuser@gmail.com")
 
     admin.create()
     click.echo("Created admin user!")
-
 
     click.echo("Database populated!")

@@ -9,140 +9,135 @@
 {% block content %}
 
     <div class="main-outer edge-padding">
-      <main class="main-content width-limiter">
-        <article class="term-word-container">
-          <h1 class="term-word-detail">{{term.eng_word}} - {{ term.geo_word }}</h1>
-          <div class="term-field">
-            {% for category in term.category %}
-              {% set parent_category = category.parent %}
-              {% if parent_category %}
-                {% set grandparent_category = parent_category.parent %}
-                {% if grandparent_category %}
-                  <!-- Display grandparent category -->
-                  <a href="{{ url_for('main.view_terms_by_category', category_id=grandparent_category.id) }}">{{ grandparent_category.name }}</a> &gt;
+        <main class="main-content width-limiter">
+            <article class="term-word-container">
+                <h1 class="term-word-detail">{{ term.eng_word }} - {{ term.geo_word }}</h1>
+                {% set category_trees = term.get_category_tree() %}
+                {% for tree in category_trees %}
+                    <div class="term-field">
+                        {% for category in tree %}
+                            <a href="{{ url_for('main.view_terms_by_category', category_id=category.id) }}">
+                                {{ category.name }}
+                            </a>
+                            {% if not loop.last %}
+                                &gt;
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+                <div class="term-word-type">{{ term.grammar_form }}</div>
+                <div class="term-qualifications">შესაბამისი კვალიფიკაცია</div>
+
+                {% if term.term_source %}
+                    <section class="term-source">
+                        <h2>ტერმინის წყარო:</h2>
+                        <p> {{ term.term_source|safe }} </p>
+                    </section>
                 {% endif %}
-                <!-- Display parent category -->
-                <a href="{{ url_for('main.view_terms_by_category', category_id=parent_category.id) }}">{{ parent_category.name }}</a> &gt;
-                
-              {% endif %}
-              <!-- Display current category -->
-              <a href="{{ url_for('main.view_terms_by_category', category_id=category.id) }}">{{ category.name }}</a>    
-            {% endfor %}
-          </div>
-          <div class="term-word-type">{{term.grammar_form}}</div>
-          <div class="term-qualifications">შესაბამისი კვალიფიკაცია</div>
 
-          <section class="term-source">
-            <h2>ტერმინის წყარო:</h2>
-            <p>
-              {{ term.term_source|safe }} 
-            </p>
-          </section>
-          <section class="term-definition">
-            <h2>განმარტება:</h2>
-            <p>
-              {{term.definition}}
-            </p>
-          </section>
-          <section class="term-definition-source">
-            <h2>განმარტების წყარო:</h2>
-            <p>
-              {{term.definition_source|safe}}
-            </p>
-          </section>
-          <section class="term-type">
-            <h2>ტერმინის ტიპი:</h2>
-            <p>{{term.term_type}}</p>
-          </section>
-          <section class="term-context">
-            <h2>კონტექსტი:</h2>
-            <p>
-              {{term.context}}
-            </p>
-          </section>
-          <section class="term-context-source">
-            <h2>კონტექსტის წყარო:</h2>
-            <p>
-              {{term.context_source|safe}}
-            </p>
-          </section>
-          <section class="term-synonyms">
-            <h2>სინონიმები:</h2>
-            {% if synonyms %}
-            <ul>
-                {% for synonym in synonyms %}
-                  {% if synonym.term1 and synonym.term2 %}
-                    {% set related_term = synonym.term1 if synonym.term2.id == term.id else synonym.term2 %}
-                    <li><a href="{{ url_for('main.term_detail', term_id=related_term.id) }}">{{ related_term.geo_word }}</a></li>
-                  {% else %}
-                    <li>Invalid synonym data</li>
-                  {% endif %}
-                {% endfor %}
-            </ul>
-            {% else %}
-              <p>No synonyms available</p>
-            {% endif %}
-          </section>
+                {# No need to check definition, there will always be one #}
+                <section class="term-definition">
+                    <h2>განმარტება:</h2>
+                    <p> {{ term.definition }} </p>
+                </section>
 
-          <section class="term-related">
-            <h2>დაკავშირებული სიტყვები:</h2>
-            {% if connected_terms %}
-            <ul>
-                {% for connected_term in connected_terms %}
-                    {% if connected_term.term1 and connected_term.term2 %}
-                        {% set related_term = connected_term.term1 if connected_term.term2.id == term.id else connected_term.term2 %}
-                        <li><a href="{{ url_for('main.term_detail', term_id=related_term.id) }}">{{ related_term.geo_word }}</a></li>
-                    {% else %}
-                        <li>Invalid connection data</li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-            {% else %}
-            <p>No related terms available</p>
-            {% endif %}
-          </section>
+                {% if term.definition_source %}
+                    <section class="term-definition-source">
+                        <h2>განმარტების წყარო:</h2>
+                        <p> {{ term.definition_source|safe }} </p>
+                    </section>
+                {% endif %}
 
-          <section class="term-comment">
-            <h2>კომენტარი:</h2>
-            <p>
-              {{term.comment}}
-            </p>
-          </section>
-          <a class="go-back-button-container" href="{{ url_for('main.home') }}">
-            <button type="button" class="go-back-button">
-              <img src="{{ url_for('static', filename='images/' + 'go-back.svg') }}" alt="Go back" />
-            </button>
-            <span>უკან დაბრუნება</span>
-          </a>
-        </article>
-      </main>
+                {% if term.term_type %}
+                    <section class="term-type">
+                        <h2>ტერმინის ტიპი:</h2>
+                        <p>{{ term.term_type }}</p>
+                    </section>
+                {% endif %}
+
+                {% if term.context %}
+                    <section class="term-context">
+                        <h2>კონტექსტი:</h2>
+                        <p> {{ term.context }} </p>
+                    </section>
+                {% endif %}
+
+                {% if term.context_source %}
+                    <section class="term-context-source">
+                        <h2>კონტექსტის წყარო:</h2>
+                        <p> {{ term.context_source|safe }} </p>
+                    </section>
+                {% endif %}
+
+                {% set synonyms = term.get_synonyms() %}
+                {% if synonyms %}
+                    <section class="term-synonyms">
+                        <h2>სინონიმები:</h2>
+                        <ul>
+                            {% for synonym in synonyms %}
+                                <li>
+                                    <a href="{{ url_for('main.term_detail', term_id=synonym.id) }}">{{ synonym.geo_word }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </section>
+                {% endif %}
+
+                {% set related_terms = term.get_related_terms() %}
+                {% if related_terms %}
+                    <section class="term-related">
+                        <h2>დაკავშირებული სიტყვები:</h2>
+                        <ul>
+                            {% for related_term in related_terms %}
+                                <li>
+                                    <a href="{{ url_for('main.term_detail', term_id=related_term.id) }}">{{ related_term.geo_word }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </section>
+                {% endif %}
+
+                {% if term.comment %}
+                    <section class="term-comment">
+                        <h2>კომენტარი:</h2>
+                        <p> {{ term.comment }} </p>
+                    </section>
+                {% endif %}
+                <a class="go-back-button-container" href="{{ url_for('main.home') }}">
+                    <button type="button" class="go-back-button">
+                        <img src="{{ url_for('static', filename='images/' + 'go-back.svg') }}" alt="Go back"/>
+                    </button>
+                    <span>უკან დაბრუნება</span>
+                </a>
+            </article>
+        </main>
     </div>
-    
+
 
 
 
 
 
     <dialog id="success-modal" class="info-modal">
-      <section class="info-modal-content">
-        <img src="{{ url_for('static', filename='images/' + 'success.svg') }}" alt="success tick" />
-        <p class="info-text">წარმატებით გამოიწერეთ სიახლეები</p>
-        <a class="base-button secondary-button" href="{{ url_for('main.home') }}">
-          მთავარ გვერდზე დაბრუნება
-        </a>
-      </section>
+        <section class="info-modal-content">
+            <img src="{{ url_for('static', filename='images/' + 'success.svg') }}" alt="success tick"/>
+            <p class="info-text">წარმატებით გამოიწერეთ სიახლეები</p>
+            <a class="base-button secondary-button" href="{{ url_for('main.home') }}">
+                მთავარ გვერდზე დაბრუნება
+            </a>
+        </section>
     </dialog>
     <dialog id="error-modal" class="info-modal">
-      <section class="info-modal-content">
-        <img src="{{ url_for('static', filename='images/' + 'error.svg') }}" alt="error" />
-        <p class="info-text">დაფიქსირდა შეცდომა</p>
-        <button
-          class="base-button secondary-button"
-          id="error-modal-close-button"
-        >
-          თავიდან ცდა
-        </button>
-      </section>
+        <section class="info-modal-content">
+            <img src="{{ url_for('static', filename='images/' + 'error.svg') }}" alt="error"/>
+            <p class="info-text">დაფიქსირდა შეცდომა</p>
+            <button
+                    class="base-button secondary-button"
+                    id="error-modal-close-button"
+            >
+                თავიდან ცდა
+            </button>
+        </section>
     </dialog>
 
 {% endblock %}
