@@ -55,26 +55,10 @@ def contact():
     return render_template("main/contact.html")
 
 
-@main_blueprint.route("/term_not_found")
-def term_not_found():
-    root_categories = Category.query.filter(Category.parent_id.is_(None)).all()
-    return render_template("main/term_not_found.html", root_categories=root_categories)
-
-
 @main_blueprint.route("/term_detail/<int:term_id>")
 def term_detail(term_id):
     term = Term.query.get_or_404(term_id)
-
-    connected_terms = ConnectedTerm.query.filter(
-        (ConnectedTerm.term1_id == term_id) | (ConnectedTerm.term2_id == term_id)
-    ).all()
-
-    synonyms = ConnectedTerm.query.filter(
-        (ConnectedTerm.term1_id == term.id) | (ConnectedTerm.term2_id == term.id),
-        ConnectedTerm.is_synonym == True
-    ).all()
-
-    return render_template("main/term_detail.html", term=term, connected_terms=connected_terms, synonyms=synonyms)
+    return render_template("main/term_detail.html", term=term)
 
 
 @main_blueprint.route("/login", methods=["GET", "POST"])
