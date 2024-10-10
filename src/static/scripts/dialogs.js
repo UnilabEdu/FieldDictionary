@@ -1,16 +1,22 @@
 const dialogs = document.querySelectorAll('dialog')
-const filterDialog = document.querySelector('#filter-modal')
+ const filterModal = document.querySelector('#filter-content-backdrop')
 const showButton = document.querySelector('#filter-modal-open-button')
 const closeButton = document.querySelector('#filter-modal-close-button')
 
+function toggleFilterModal() {
+  filterModal.classList.toggle('open')
+}
+
 // "Show the dialog" button opens the dialog modally
-showButton?.addEventListener('click', () => {
-  filterDialog.showModal()
-})
+showButton?.addEventListener('click', toggleFilterModal)
 
 // "Close" button closes the dialog
-closeButton?.addEventListener('click', () => {
-  filterDialog.close()
+closeButton?.addEventListener('click', toggleFilterModal)
+
+filterModal?.addEventListener('mousedown', (e) => {
+  if (e.target === filterModal) {
+    toggleFilterModal()
+  }
 })
 
 dialogs.forEach((dialog) =>
@@ -29,26 +35,26 @@ const errorDialogCloseButton = document.querySelector(
   '#error-modal-close-button'
 )
 
-let submitStatus = "error"
+let submitStatus = 'error'
 
 subscribeForm.addEventListener('submit', (e) => {
   e.preventDefault()
-  if(emailInput.value.length === 0){
-    submitStatus = "empty"
-  }else{
-    submitStatus = "sent"
+  if (emailInput.value.length === 0) {
+    submitStatus = 'empty'
+  } else {
+    submitStatus = 'sent'
   }
 })
 
 const subscribeButton = subscribeForm.querySelector('button')
 subscribeButton.addEventListener('click', () => {
-  submitStatus = "error"
+  submitStatus = 'error'
   setTimeout(() => {
-    if (submitStatus === "sent") {
+    if (submitStatus === 'sent') {
       successDialog.showModal()
-    } else if (submitStatus === "error") {
+    } else if (submitStatus === 'error') {
       errorDialog.showModal()
-    }else{
+    } else {
       emailInput.focus()
     }
   }, 200)
@@ -68,6 +74,7 @@ const errorDialogCloseButtonContact = document.querySelector(
 let didSubmitContact = false
 
 contactForm?.addEventListener('submit', (e) => {
+  console.log('submiti')
   e.preventDefault()
   didSubmitContact = true
 })
@@ -87,4 +94,3 @@ contactButton?.addEventListener('mousedown', () => {
 errorDialogCloseButtonContact?.addEventListener('click', () => {
   errorDialogContact.close()
 })
-

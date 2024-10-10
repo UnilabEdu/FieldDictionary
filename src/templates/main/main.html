@@ -9,15 +9,14 @@
 {% block content %}
     <div class="main-outer edge-padding">
         <main class="main-content width-limiter">
-            <section id="desktop-filters-content" class="filter-content">
+            <div id="filter-content-backdrop" class="filter-content-backdrop">
                 {% include 'main/filters_section.html' %}
-                <button class="base-button" id="searchButton2">ძებნა</button>
-            </section>
+            </div>
 
             <section class="right-section">
                 <section class="search-controls">
                     <div class="search-input-container">
-                         <input class="search-input" type="text" placeholder="ძიება" id="searchWord"
+                        <input class="search-input" type="text" placeholder="ძიება" id="searchWord"
                                value="{{ search_word }}"/>
                         <a>
                             <button class="search-button" id="searchButton">
@@ -33,7 +32,7 @@
                         <img src="{{ url_for('static', filename='images/filter.svg') }}"/>
                     </button>
 
-                    <ul class="selected-filter-list">
+                    <ul id="filter-label-slot" class="selected-filter-list" {% if filtered_categories %} style="display: flex;" {% endif %}>
                         {% for category in filtered_categories %}
                             <li class="selected-filter-item">
                                 {{ category.name }}
@@ -190,38 +189,47 @@
                     <div class="term-list-bottom-bar">
                         <ul class="pagination">
                             <li class="pagination-item">
-                                <button class="pagination-button" {% if not terms.has_prev %} disabled {% endif %}>
+                                <a class="pagination-link {% if not terms.has_prev %} disabled {% endif %}">
                                     <img src="{{ url_for('static', filename='images/double-left.svg') }}"
                                          alt="first page"/>
-                                </button>
+                                </a>
                             </li>
                             <li class="pagination-item">
-                                <button class="pagination-button" {% if not terms.has_prev %} disabled {% endif %}>
+                                <a class="pagination-link{% if not terms.has_prev %} disabled {% endif %}">
                                     <img src="{{ url_for('static', filename='images/left.svg') }}"
                                          alt="previous page"/>
-                                </button>
+                                </a>
                             </li>
                             {% set query_string = request.query_string.decode() %}
-                            {% for page in terms.iter_pages() %}
-                                <li class="pagination-item">
-                                    <a href="{{ url_for("main.home", page=page) }}?{{ query_string }}"
-                                       class="pagination-button active">{{ page }}</a>
-                                </li>
-                            {% endfor %}
+                            {% set current_page = request.view_args.get("page", 1) %}
+                            {%- for page in terms.iter_pages(left_edge=0, left_current=2, right_current=2, right_edge=0) -%}
+                                {%- if page -%}
+                                    <li class="pagination-item">
+                                        <a href="{{ url_for("main.home", page=page) }}?{{ query_string }}"
+                                           class="pagination-link {% if page == current_page %} active {% endif %}">
+                                            {{- page -}}
+                                        </a>
+                                    </li>
+                                {%- endif -%}
+                            {%- endfor -%}
 
                             <li class="pagination-item">
-                                <button class="pagination-button" {% if not terms.has_next %} disabled {% endif %}>
+                                <a class="pagination-link {% if not terms.has_next %} disabled {% endif %}">
                                     <img src="{{ url_for('static', filename='images/right.svg') }}" alt="next page"/>
-                                </button>
+                                </a>
                             </li>
                             <li class="pagination-item">
-                                <button class="pagination-button" {% if not terms.has_next %} disabled {% endif %}>
+                                <a class="pagination-link {% if not terms.has_next %} disabled {% endif %}">
                                     <img src="{{ url_for('static', filename='images/double-right.svg') }}"
                                          alt="last page"/>
-                                </button>
+                                </a>
                             </li>
                         </ul>
-                        <span class="search-result-number">სულ დამატებულია {{ terms.total }} ტერმინი</span>
+                        {% if request.query_string.decode() == "" %} {# No filters #}
+                            <span class="search-result-number">სულ დამატებულია {{ terms.total }} ტერმინი</span>
+                        {% else %}
+                            <span class="search-result-number">სულ ნაპოვნია {{ terms.total }} ტერმინი</span>
+                        {% endif %}
                     </div>
                 {% else %}
                     <section class="not-found-container">
@@ -234,17 +242,5 @@
             </section>
         </main>
     </div>
-
-    <dialog id="filter-modal">
-        <div class="filter-modal-content">
-            <button id="filter-modal-close-button" class="vector-button">
-                <img src="{{ url_for('static', filename='images/x.svg') }}" alt="close"/>
-            </button>
-            <section class="filter-content">
-                {% include 'main/filters_section.html' %}
-                <button class="base-button modal-filter-button">ძებნა</button>
-            </section>
-        </div>
-    </dialog>
 
 {% endblock %}

@@ -16,23 +16,42 @@ errorableFields.forEach((field) => {
   })
 })
 
-const checkboxGroups = document.querySelectorAll('.checkbox-group')
+const contactFields = document.querySelectorAll(
+  '#contact-form input, #contact-form textarea'
+)
+const contactSubmitBtn = document.querySelector(
+  '#contact-form button[type="submit"]'
+)
 
-checkboxGroups.forEach((checkboxGroup) => {
-  const arrowBtn = checkboxGroup.querySelector(
-    '.checkbox-container > .vector-button'
+function enableSubmitOnAllFilled() {
+  const allFieldsFilled = [...contactFields].every(
+    (field) => field.value.length > 0
   )
+  contactSubmitBtn.disabled = !allFieldsFilled
+}
 
-  if (!arrowBtn) return
-
-  const checkboxList = checkboxGroup.querySelector('.checkbox-list')
-
-  if (!checkboxList) {
-    arrowBtn.disabled = true
-    return
-  }
-
-  arrowBtn.addEventListener('click', () => {
-    checkboxGroup.classList.toggle('open')
-  })
+contactFields.forEach((field) => {
+  field.addEventListener('blur', enableSubmitOnAllFilled)
+  field.addEventListener('keyup', enableSubmitOnAllFilled)
 })
+
+if (contactSubmitBtn) {
+  enableSubmitOnAllFilled()
+}
+
+const subjectField = document.querySelector(
+  '#contact-form input[name="subject"]'
+)
+
+if (subjectField) {
+  addInitialSubject()
+}
+
+function addInitialSubject() {
+  const searchParams = new URLSearchParams(window.location.search)
+  const initialSubject = searchParams.get('subject')
+
+  if (!initialSubject) return
+
+  subjectField.value = initialSubject
+}

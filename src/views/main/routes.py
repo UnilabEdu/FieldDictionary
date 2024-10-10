@@ -25,8 +25,8 @@ def home(page=1):
     categories = request.args.get("categories")
     if categories:
         categories = unquote(categories).split(",")
-        terms = terms.join(Term.category).filter(Category.id.in_(categories))
         filtered_categories = Category.query.filter(Category.id.in_(categories)).all()
+        terms = terms.join(Term.category).filter(Category.id.in_(categories))
 
     sort = request.args.get("sortType")
     if sort:
@@ -38,10 +38,9 @@ def home(page=1):
         terms = terms.order_by(sort_map[sort].desc())
 
     print(search_letter, search_word, categories, sort)
-
-    terms = terms.paginate(per_page=10, page=page)
+    terms = terms.paginate(per_page=5, page=page)
     return render_template("main/main.html", terms=terms,
-                           root_categories=root_categories,filtered_categories=filtered_categories,
+                           root_categories=root_categories, filtered_categories=filtered_categories,
                            search_word=search_word, search_letter=search_letter, sort=sort)
 
 

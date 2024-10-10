@@ -92,7 +92,7 @@
   width: 0;
   max-width: 390px;
   font-size: 14px;
-  z-index: 10;
+  z-index: 20;
   left: 50%;
   top: calc(100% + 8px);
   padding: 6px 8px;
@@ -101,6 +101,11 @@
   pointer-events: none;
   color: rgb(var(--color-black));
   overflow: hidden;
+}
+
+/* Flow reverse tooltip*/
+.tooltip-lr::after {
+  transform: translateX(-100%);
 }
 
 .tooltip-l::after {
@@ -294,7 +299,8 @@
   width: fit-content;
 }
 
-.pagination button {
+.pagination .pagination-link {
+  all: unset;
   display: flex;
   background-color: rgb(var(--color-white));
   width: 32px;
@@ -303,20 +309,22 @@
   justify-content: center;
   font-size: 18px;
   border-radius: 8px;
+  cursor: pointer;
 }
 
-.pagination button.active {
+.pagination .pagination-link.active {
   background-color: rgb(var(--color-light-blue));
 }
 
-.pagination button:hover {
+.pagination .pagination-link:hover {
   background-color: rgb(var(--color-gray-2));
 }
 
-.pagination button:disabled {
+.pagination .pagination-link.disabled {
   background-color: rgb(var(--color-white));
   opacity: 0.7;
   cursor: default;
+  pointer-events: none;
 }
 
 /*   Closed state of the dialog   */
@@ -490,6 +498,7 @@ dialog[open]::backdrop {
 .base-button:disabled {
   background-color: rgb(var(--color-gray-2));
   color: rgb(var(--color-black));
+  cursor: default;
 }
 
 .secondary-button {
@@ -628,7 +637,7 @@ dialog .info-text {
     font-size: 18px;
   }
 
-  .pagination button {
+  .pagination .pagination-link {
     width: 45px;
     height: 45px;
   }
@@ -658,6 +667,10 @@ dialog .info-text {
 
   .search-result-number {
     display: inline;
+  }
+
+  .tooltip-lr::after {
+    transform: translateX(0);
   }
 
   .pagination {

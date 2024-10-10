@@ -1,42 +1,52 @@
 {% from "macros.html" import get_subcategories %}
 
-<div class="filter-group">
-    <div class="select-container">
-        <select name="sorting" class="select base-field" id="sortType">
-            <option value="">სორტირება</option>
-            <option value="en" {% if sort == "en" %} selected {% endif %}>A-დან Z-მდე</option>
-            <option value="ka" {% if sort == "ka" %} selected {% endif %}>ა-დან ჰ-მდე</option>
-            <option value="recent" {% if sort == "recent" %} selected {% endif %}>ბოლოს დამატებული</option>
-        </select>
-        <img class="select-arrow" src="{{ url_for('static', filename='images/down.svg') }}" alt="arrow"/>
-    </div>
-    <button class="filter-icon-container vector-button reset-filters-button" title="ფილტრების გასუფთავება"
-            onclick="window.location.href=window.location.origin">
-        <img src="{{ url_for('static', filename='images/retry.svg') }}" alt="reload"/>
+<div class="filter-content-container">
+    <button id="filter-modal-close-button" class="vector-button">
+        <img src="{{ url_for('static', filename='images/x.svg') }}" alt="close"/>
     </button>
-</div>
-<div class="filter-group">
-    <input class="base-field" placeholder="აკრიფე ასო" id="searchLetter" value="{{ search_letter }}"/>
-    <div class="filter-icon-container filter-help" title="ამ ველში ჩაწერილი ასოთი/ასოებით დაიწყება ტერმინები">
-        <img src="{{ url_for('static', filename='images/question.svg') }}" alt="arrow down"/>
-    </div>
-</div>
-<ul class="checkbox-list level-1">
-    {%- for category in root_categories -%}
-        <div class="checkbox-group {% if category in filtered_categories %} open {% endif %}">
-            <div class="checkbox-container">
-                <input id="category-checkbox-{{ category.id }}" type="checkbox"
-                       {% if category in filtered_categories %} checked {% endif %}
-                       data-category="{{ category.id }}"/>
-                <label for="category-checkbox-{{ category.id }}">{{ category.name }}</label>
-                {% if category.children %}
-                    <button class="vector-button toggle-button">
-                        <img src="{{ url_for('static', filename='images/down.svg') }}" alt="arrow down"/>
-                    </button>
-                {% endif %}
+
+    <section class="filter-content">
+        <div class="filter-group">
+            <div class="select-container">
+                <select name="sorting" class="select base-field" id="sortType">
+                    <option value="">სორტირება</option>
+                    <option value="en" {% if sort == "en" %} selected {% endif %}>A-დან Z-მდე</option>
+                    <option value="ka" {% if sort == "ka" %} selected {% endif %}>ა-დან ჰ-მდე</option>
+                    <option value="recent" {% if sort == "recent" %} selected {% endif %}>ბოლოს დამატებული</option>
+                </select>
+                <img class="select-arrow" src="{{ url_for('static', filename='images/down.svg') }}" alt="arrow"/>
             </div>
-            {{ get_subcategories(category, 2, filtered_categories) }}
+            <button class="filter-icon-container vector-button reset-filters-button" title="ფილტრების გასუფთავება"
+                    onclick="window.location.href=window.location.origin">
+                <img src="{{ url_for('static', filename='images/retry.svg') }}" alt="reload"/>
+            </button>
         </div>
-    {%- endfor -%}
-</ul>
-  
+        <div class="filter-group">
+            <input class="base-field" placeholder="აკრიფე ასო" id="searchLetter" value="{{ search_letter }}"/>
+            <div class="filter-icon-container filter-help" title="ამ ველში ჩაწერილი ასოთი/ასოებით დაიწყება ტერმინები">
+                <img src="{{ url_for('static', filename='images/question.svg') }}" alt="arrow down"/>
+            </div>
+        </div>
+        <ul class="checkbox-list level-1">
+            {%- for category in root_categories -%}
+                <div class="checkbox-group {% if category in filtered_categories %} open {% endif %}">
+                    <div class="checkbox-container">
+                        <input id="category-checkbox-{{ category.id }}" type="checkbox"
+                                {% if category in filtered_categories %} checked {% endif %}
+                               data-category="{{ category.id }}"/>
+                        <label for="category-checkbox-{{ category.id }}">{{ category.name }}</label>
+                        {% if category.children %}
+                            <button class="vector-button toggle-button">
+                                <img src="{{ url_for('static', filename='images/down.svg') }}" alt="arrow down"/>
+                            </button>
+                        {% endif %}
+                    </div>
+                    {{ get_subcategories(category, 2, filtered_categories) }}
+                </div>
+            {%- endfor -%}
+        </ul>
+
+        <button class="base-button filter-content-submit-button" id="searchButton2">ძებნა</button>
+    </section>
+</div>
+
