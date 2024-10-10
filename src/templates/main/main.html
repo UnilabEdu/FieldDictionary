@@ -32,7 +32,8 @@
                         <img src="{{ url_for('static', filename='images/filter.svg') }}"/>
                     </button>
 
-                    <ul id="filter-label-slot" class="selected-filter-list" {% if filtered_categories %} style="display: flex;" {% endif %}>
+                    <ul id="filter-label-slot" class="selected-filter-list" {% if filtered_categories %}
+                        style="display: flex;" {% endif %}>
                         {% for category in filtered_categories %}
                             <li class="selected-filter-item">
                                 {{ category.name }}
@@ -157,17 +158,32 @@
                                     </div>
                                 </section>
                                 <section class="term-group" id="connected-{{ term.id }}">
-                                    <h4 class="term-group-title">დაკავშირებული სიტყვები</h4>
-                                    <div>
-                                        <ul>
-                                            {% for connected_term in term.get_related_terms() %}
-                                                <li>
+                                    {% set synonyms = term.get_synonyms() %}
+                                    {% set connected_terms = term.get_related_terms() %}
+                                    {% if synonyms %}
+                                        <div>
+                                            <h4 class="term-group-title">სინონიმები</h4>
+                                            <div>
+                                                {% for synonym in synonyms %}
+                                                    <a href="{{ url_for('main.term_detail', term_id=synonym.id) }}">
+                                                        {{ synonym.geo_word }}
+                                                    </a>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if connected_terms %}
+                                        <div>
+                                            <h4 class="term-group-title">დაკავშირებული სიტყვები</h4>
+                                            <div>
+                                                {% for connected_term in connected_terms %}
                                                     <a href="{{ url_for('main.term_detail', term_id=connected_term.id) }}">
                                                         {{ connected_term.geo_word }}
-                                                    </a></li>
-                                            {% endfor %}
-                                        </ul>
-                                    </div>
+                                                    </a>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
                                 </section>
                                 <section class="term-group" id="comment-{{ term.id }}">
                                     <h4 class="term-group-title">კომენტარი</h4>

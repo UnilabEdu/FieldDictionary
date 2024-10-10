@@ -72,13 +72,24 @@
                 {% set synonyms = term.get_synonyms() %}
                 {% if synonyms %}
                     <section class="term-synonyms">
-                        <h2>სინონიმები:</h2>
+                        <h2>ქართული სინონიმები:</h2>
                         <ul>
                             {% for synonym in synonyms %}
                                 <li>
                                     <a href="{{ url_for('main.term_detail', term_id=synonym.id) }}">{{ synonym.geo_word }}</a>
                                 </li>
                             {% endfor %}
+                        </ul>
+                    </section>
+                {% endif %}
+
+                {% if term.english_synonyms %}
+                    <section class="term-synonyms">
+                        <h2>ინგლისური სინონიმები:</h2>
+                        <ul>
+                            <li>
+                                {{ term.english_synonyms }}
+                            </li>
                         </ul>
                     </section>
                 {% endif %}
