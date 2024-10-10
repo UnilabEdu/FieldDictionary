@@ -204,20 +204,22 @@
 
                     <div class="term-list-bottom-bar">
                         <ul class="pagination">
+                            {% set query_string = request.query_string.decode() %}
+                            {% set current_page = request.view_args.get("page", 1) %}
                             <li class="pagination-item">
-                                <a class="pagination-link {% if not terms.has_prev %} disabled {% endif %}">
+                                <a href="{{ url_for("main.home", page=1) }}?{{ query_string }}"
+                                   class="pagination-link {% if not terms.has_prev %} disabled {% endif %}">
                                     <img src="{{ url_for('static', filename='images/double-left.svg') }}"
                                          alt="first page"/>
                                 </a>
                             </li>
                             <li class="pagination-item">
-                                <a class="pagination-link{% if not terms.has_prev %} disabled {% endif %}">
+                                <a href="{{ url_for("main.home", page=current_page - 1) }}?{{ query_string }}"
+                                   class="pagination-link{% if not terms.has_prev %} disabled {% endif %}">
                                     <img src="{{ url_for('static', filename='images/left.svg') }}"
                                          alt="previous page"/>
                                 </a>
                             </li>
-                            {% set query_string = request.query_string.decode() %}
-                            {% set current_page = request.view_args.get("page", 1) %}
                             {%- for page in terms.iter_pages(left_edge=0, left_current=2, right_current=2, right_edge=0) -%}
                                 {%- if page -%}
                                     <li class="pagination-item">
@@ -230,12 +232,14 @@
                             {%- endfor -%}
 
                             <li class="pagination-item">
-                                <a class="pagination-link {% if not terms.has_next %} disabled {% endif %}">
+                                <a href="{{ url_for("main.home", page=current_page + 1) }}?{{ query_string }}"
+                                   class="pagination-link {% if not terms.has_next %} disabled {% endif %}">
                                     <img src="{{ url_for('static', filename='images/right.svg') }}" alt="next page"/>
                                 </a>
                             </li>
                             <li class="pagination-item">
-                                <a class="pagination-link {% if not terms.has_next %} disabled {% endif %}">
+                                <a href="{{ url_for("main.home", page=terms.pages) }}?{{ query_string }}"
+                                   class="pagination-link {% if not terms.has_next %} disabled {% endif %}">
                                     <img src="{{ url_for('static', filename='images/double-right.svg') }}"
                                          alt="last page"/>
                                 </a>

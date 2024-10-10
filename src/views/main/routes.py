@@ -16,7 +16,7 @@ def home(page=1):
     terms = Term.query
     search_word = request.args.get("searchWord", "")
     if search_word:
-        terms = terms.filter(Term.geo_word.ilike(f"%{search_word}%") | Term.eng_word.ilike(f"%{search_word}%"))
+        terms = terms.filter(Term.geo_word.ilike(f"%{search_word}%") | Term.eng_word.ilike(f"%{search_word}%") | Term.english_synonyms.ilike(f"%{search_word}%"))
 
     search_letter = request.args.get("searchLetter", "")
     if search_letter:
