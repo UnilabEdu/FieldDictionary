@@ -17,6 +17,8 @@ class Term(BaseModel):
     context_source = db.Column(db.Text, nullable=True)
     comment = db.Column(db.Text, nullable=True)
     english_synonyms = db.Column(db.Text, nullable=True)
+    stylistic_label = db.Column(db.String(50), nullable=True)
+    is_active = db.Column(db.Boolean, default=True)
 
     category = db.relationship("Category", secondary="terms_categories", backref="terms")
 
@@ -38,13 +40,18 @@ class Term(BaseModel):
     def has_synonyms_or_relations(self):
         connections = ConnectedTerm.query.filter((ConnectedTerm.term1_id == self.id) | (ConnectedTerm.term2_id == self.id)).first()
         return connections != None
-
+    
     def get_category_tree(self):
         category_trees = []
         for category in self.category:
-            categories = category.get_parents()
-            categories.append(category)
-            category_trees.append(categories)
+            parents = category.get_parents()
+            # Check if the current category and all parent categories are active
+            if category.is_active:
+                # Check all parents' active status
+                if all(parent.is_active for parent in parents):
+                    # Add parents and current category to the tree
+                    parents.append(category)
+                    category_trees.append(parents)
         return category_trees
 
 
@@ -71,24 +78,29 @@ class Category(BaseModel):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     parent_id = db.Column(db.Integer, db.ForeignKey("categories.id"), nullable=True)
+    is_active = db.Column(db.Boolean, default=True)
 
     # Establish the relationship between parent and child categories
     children = db.relationship('Category', backref=db.backref('parent', remote_side=[id]))
-
-    def get_descendants(self):
+    
+    def get_descendants(self, include_inactive=False):
+        """ Return all descendants of the category, optionally filtering only active ones. """
         descendants = []
         for child in self.children:
-            descendants.append(child)
-            descendants.extend(child.get_descendants())
+            # Only include the child if it's active or include_inactive is True
+            if child.is_active or include_inactive:
+                descendants.append(child)
+                descendants.extend(child.get_descendants(include_inactive=include_inactive))
         return descendants
-
+    
     def get_parents(self):
         parents = []
         if self.parent:
-            parents.append(self.parent)
-            parents.extend(self.parent.get_parents())
+            if self.parent.is_active:
+                parents.append(self.parent)
+                parents.extend(self.parent.get_parents())
         return parents
-
+    
     def __repr__(self):
         return self.name
 
