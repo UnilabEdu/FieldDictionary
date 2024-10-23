@@ -21,7 +21,7 @@ class CategoryView(SecureModelView):
     column_labels = {
         "name": "კატეგორია",
         "parent": "მშობელი კატეგორია",
-        "is_active": "აქტიური/არააქტიური"
+        "is_active": "აქტიური"
     }
 
     column_searchable_list = ['name']
@@ -84,7 +84,7 @@ class TermView(SecureModelView):
         "synonyms": "სინონიმები",
         "english_synonyms": "ინგლისური სინონიმები",
         "connected_terms": "დაკავშირებული სიტყვები",
-        "is_active": "აქტიური/არააქტიური"
+        "is_active": "აქტიური"
     }
 
     form_overrides = {

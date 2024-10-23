@@ -19,10 +19,13 @@
             </div>
 
             {% block menu_links %}
-                <ul class="nav navbar-nav navbar-right">
-                    {{ layout.menu_links() }}
+                <ul class="nav navbar-nav navbar-right" style="margin-right: 3%;">
+                    <li>
+                        <a class="nav-link" href="{{ url_for('main.logout') }}">გასვლა</a>
+                    </li>
                 </ul>
             {% endblock %}
+
             {% block access_control %}
             {% endblock %}
         </div>
@@ -37,4 +40,3 @@
         {% block body %}{% endblock %}
     </div>
 {% endblock %}
-
