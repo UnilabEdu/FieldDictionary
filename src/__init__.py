@@ -49,9 +49,9 @@ def register_extensions(app):
     
     # Flask-Admin
     admin.init_app(app)
-    admin.add_view(TermView(Term, db.session, endpoint="term_panel", name="Terms"))
-    admin.add_view(CategoryView(Category, db.session, endpoint="category", name="Categories"))
-    admin.add_view(UserView(User, db.session))
+    admin.add_view(TermView(Term, db.session, endpoint="term_panel", name="ტერმინები"))
+    admin.add_view(CategoryView(Category, db.session, endpoint="category", name="დარგები"))
+    admin.add_view(UserView(User, db.session, name="მომხმარებელი"))
 
 
 def register_commands(app):

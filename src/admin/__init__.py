@@ -3,7 +3,9 @@ from src.admin.base import SecureIndexView
 from src.admin.base import LogoutMenuLink
 
 
+
 admin = Admin(index_view=SecureIndexView(), template_mode="bootstrap4", base_template="admin/admin_base.html")
 
 
-admin.add_link(LogoutMenuLink(name="Logout", category="", url="/logout"))
+admin.add_link(LogoutMenuLink(name="გასვლა", category="", url="/logout"))
+

@@ -41,7 +41,7 @@ def populate_db():
 
     click.echo("Created categories!")
     for i in range(1, 50):
-        term = Term(geo_word=f"ქართული {i}", eng_word=f"English {i}", grammar_form="ზმნა", term_source="google.com",
+        term = Term(geo_word=f"ქართული {i}", eng_word=f"English {i}", grammar_form="ზმნა", stylistic_label="შესაბამისი კვალიფიკაცია", term_source="google.com",
                     definition="შემთხვევითად გენერირებული ტექსტი ეხმარება დიზაინერებს და ტიპოგრაფიული ნაწარმის შემქმნელებს, "
                                "რეალურთან მაქსიმალურად მიახლოებული შაბლონი წარუდგინონ შემფასებელს. ხშირადაა შემთხვევა, "
                                "როდესაც დიზაინის შესრულებისას საჩვენებელია, თუ როგორი იქნება ტექსტის ბლოკი. სწორედ ასეთ დროს "

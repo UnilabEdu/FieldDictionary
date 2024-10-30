@@ -22,7 +22,11 @@ class SecureIndexView(AdminIndexView):
     def inaccessible_callback(self, name, **kwargs):
         if not self.is_accessible():
             return redirect(url_for("main.login"))
-
+        
+    @expose('/')
+    def index(self):
+        return redirect(url_for('term_panel.index_view'))
+    
 
 class LogoutMenuLink(MenuLink):
     def is_accessible(self):
