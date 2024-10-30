@@ -112,8 +112,8 @@ class TermView(SecureModelView):
         "is_active"
     ]
 
-    form_extra_fields = {"connections_field": QuerySelectMultipleField("დაკავშრებული სიტყვები", query_factory=lambda: Term.query.filter_by(is_active=True)),
-                         "synonyms_field": QuerySelectMultipleField("სინონიმები", query_factory=lambda: Term.query.filter_by(is_active=True))}
+    form_extra_fields = {"connections_field": QuerySelectMultipleField("დაკავშრებული სიტყვები", query_factory=lambda: Term.query),
+                         "synonyms_field": QuerySelectMultipleField("სინონიმები", query_factory=lambda: Term.query)}
 
     def create_model(self, form):
         try:
@@ -139,16 +139,14 @@ class TermView(SecureModelView):
     def update_model(self, form, model):
         try:
             if form.connections_field.data:
-                related_term_ids = {term.id for term in model.get_related_terms() if term.is_active}
+                related_term_ids = {term.id for term in model.get_related_terms()}
                 field_term_ids = {int(term_id) for term_id in form.connections_field.raw_data}
 
                 removed_terms = related_term_ids.difference(field_term_ids)
                 added_terms = field_term_ids.difference(related_term_ids)
 
                 for term_id in added_terms:
-                    # Retrieve the term object to check its is_active status
-                    term = Term.query.get(term_id)
-                    if term and term.is_active and term_id != model.id and term_id not in related_term_ids:
+                    if term_id != model.id and term_id not in related_term_ids:
                         ConnectedTerm(term1_id=model.id, term2_id=term_id, is_synonym=False).create(commit=False)
 
                 if removed_terms:
@@ -162,16 +160,14 @@ class TermView(SecureModelView):
 
 
             if form.synonyms_field.data:
-                synonym_ids = {term.id for term in model.get_synonyms() if term.is_active}
+                synonym_ids = {term.id for term in model.get_synonyms()}
                 field_term_ids = {int(term_id) for term_id in form.synonyms_field.raw_data}
 
                 removed_terms = synonym_ids.difference(field_term_ids)
                 added_terms = field_term_ids.difference(synonym_ids)
 
                 for term_id in added_terms:
-                    # Retrieve the term object to check its is_active status
-                    term = Term.query.get(term_id)
-                    if term and term.is_active and term_id != model.id and term_id not in synonym_ids:
+                    if term_id != model.id and term_id not in synonym_ids:
                         ConnectedTerm(term1_id=model.id, term2_id=term_id, is_synonym=True).create(commit=False)
 
                 if removed_terms:
@@ -195,8 +191,8 @@ class TermView(SecureModelView):
     def on_form_prefill(self, form, id):
         model = Term.query.get(id)
 
-        synonyms = [synonym for synonym in model.get_synonyms() if synonym.is_active]
-        related_words = [related_word for related_word in model.get_related_terms() if related_word.is_active]
+        synonyms = [synonym for synonym in model.get_synonyms()]
+        related_words = [related_word for related_word in model.get_related_terms()]
 
         form.connections_field.default = related_words
         form.synonyms_field.default = synonyms
