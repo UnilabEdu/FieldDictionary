@@ -22,6 +22,9 @@ class SecureIndexView(AdminIndexView):
     def inaccessible_callback(self, name, **kwargs):
         if not self.is_accessible():
             return redirect(url_for("main.login"))
+
+    def is_visible(self):
+        return False
         
     @expose('/')
     def index(self):
