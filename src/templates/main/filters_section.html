@@ -27,24 +27,30 @@
                 <img src="{{ url_for('static', filename='images/question.svg') }}" alt="arrow down"/>
             </div>
         </div>
-        <ul class="checkbox-list level-1">
-            {%- for category in root_categories -%}
-                <div class="checkbox-group {% if category in filtered_categories %} open {% endif %}">
-                    <div class="checkbox-container">
-                        <input id="category-checkbox-{{ category.id }}" type="checkbox"
-                                {% if category in filtered_categories %} checked {% endif %}
-                               data-category="{{ category.id }}"/>
-                        <label for="category-checkbox-{{ category.id }}">{{ category.name }}</label>
-                        {% if category.children %}
-                            <button class="vector-button toggle-button">
-                                <img src="{{ url_for('static', filename='images/down.svg') }}" alt="arrow down"/>
-                            </button>
-                        {% endif %}
+        <div class="checkbox-outer-container">
+            <div class="checkbox-search-container">
+                <img src="/static/images/filter-search.svg" alt="checkbox search"/>
+                <input id="checkbox-search-field" type="text" class="checkbox-search" placeholder="ძიება"/>
+            </div>
+            <ul class="checkbox-list level-1">
+                {%- for category in root_categories -%}
+                    <div class="checkbox-group {% if category in filtered_categories %} open {% endif %}">
+                        <div class="checkbox-container">
+                            <input id="category-checkbox-{{ category.id }}" type="checkbox"
+                                    {% if category in filtered_categories %} checked {% endif %}
+                                   data-category="{{ category.id }}"/>
+                            <label for="category-checkbox-{{ category.id }}">{{ category.name }}</label>
+                            {% if category.children %}
+                                <button class="vector-button toggle-button">
+                                    <img src="{{ url_for('static', filename='images/down.svg') }}" alt="arrow down"/>
+                                </button>
+                            {% endif %}
+                        </div>
+                        {{ get_subcategories(category, 2, filtered_categories) }}
                     </div>
-                    {{ get_subcategories(category, 2, filtered_categories) }}
-                </div>
-            {%- endfor -%}
-        </ul>
+                {%- endfor -%}
+            </ul>
+        </div>
 
         <button class="base-button filter-content-submit-button" id="searchButton2">ძებნა</button>
     </section>

@@ -245,6 +245,8 @@
   -webkit-text-stroke: 0.3px rgb(var(--color-blue-2));
   font-size: 14px;
   color: rgb(var(--color-blue-2));
+  white-space: pre-wrap;
+  text-align: center;
 }
 
 .footer .partner-group {
@@ -645,6 +647,10 @@ dialog .info-text {
   dialog .info-text {
     font-size: 24px;
   }
+
+  .footer .copyright {
+    text-align: left;
+  }
 }
 
 @media screen and (min-width: 1280px) {
@@ -702,6 +708,7 @@ dialog .info-text {
 
   .footer .copyright {
     font-size: 18px;
+    text-align: center;
   }
 
   .footer .partner-group {
