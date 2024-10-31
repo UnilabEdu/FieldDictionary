@@ -9,20 +9,22 @@
 {% macro get_subcategories(parent, level, filtered_categories) %}
     <ul class="checkbox-list level-{{ level }}">
         {%- for subcategory in parent.children -%}
-            <div class="checkbox-group {% if subcategory in filtered_categories %} open {% endif %}">
-                <div class="checkbox-container">
-                    <input id="category-checkbox-{{ subcategory.id }}" type="checkbox"
-                           {% if subcategory in filtered_categories %} checked {% endif %}
-                           data-category="{{ subcategory.id }}"/>
-                    <label for="category-checkbox-{{ subcategory.id }}">{{ subcategory.name }}</label>
-                    {% if subcategory.children %}
-                        <button class="vector-button toggle-button">
-                            <img src="{{ url_for('static', filename='images/down.svg') }}" alt="arrow down"/>
-                        </button>
-                    {% endif %}
+            {% if subcategory.is_active %}
+                <div class="checkbox-group {% if subcategory in filtered_categories %} open {% endif %}">
+                    <div class="checkbox-container">
+                        <input id="category-checkbox-{{ subcategory.id }}" type="checkbox"
+                                {% if subcategory in filtered_categories %} checked {% endif %}
+                               data-category="{{ subcategory.id }}"/>
+                        <label for="category-checkbox-{{ subcategory.id }}">{{ subcategory.name }}</label>
+                        {% if subcategory.children %}
+                            <button class="vector-button toggle-button">
+                                <img src="{{ url_for('static', filename='images/down.svg') }}" alt="arrow down"/>
+                            </button>
+                        {% endif %}
+                    </div>
+                    {{ get_subcategories(subcategory, level + 1, filtered_categories) }}
                 </div>
-                {{ get_subcategories(subcategory, level + 1, filtered_categories) }}
-            </div>
+            {% endif %}
         {%- endfor -%}
     </ul>
 {% endmacro %}

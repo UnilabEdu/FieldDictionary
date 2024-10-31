@@ -1,8 +1,9 @@
 from flask import render_template, Blueprint, redirect, url_for, request
 from flask_login import login_user, logout_user
 from urllib.parse import unquote
+from sqlalchemy import func
 
-from src.models import Term, ConnectedTerm, Category, User
+from src.models import Term, ConnectedTerm, Category, User, TermCategory
 from src.views.main.forms import LoginForm
 
 main_blueprint = Blueprint("main", __name__)
@@ -11,48 +12,22 @@ main_blueprint = Blueprint("main", __name__)
 @main_blueprint.route("/")
 @main_blueprint.route("/page/<int:page>")
 def home(page=1):
-    # Retrieve only active root categories (those with no parent)
-    root_categories = Category.query.filter(Category.parent_id.is_(None), Category.is_active.is_(True)).all()
+    root_categories = Category.query.filter(Category.parent_id.is_(None), Category.is_active == True).all()
     filtered_categories = []
-
-    # Start with filtering active terms only (keep it a query object)
-    terms_query = Term.query.filter(Term.is_active.is_(True))
-
+    terms = Term.query.filter(Term.is_active == True, Term.category.any(Category.is_active == True))
     search_word = request.args.get("searchWord", "")
     if search_word:
-        terms_query = terms_query.filter(
-            Term.geo_word.ilike(f"%{search_word}%") |
-            Term.eng_word.ilike(f"%{search_word}%") |
-            Term.english_synonyms.ilike(f"%{search_word}%")
-        )
+        terms = terms.filter(Term.geo_word.ilike(f"%{search_word}%") | Term.eng_word.ilike(f"%{search_word}%") | Term.english_synonyms.ilike(f"%{search_word}%"))
 
     search_letter = request.args.get("searchLetter", "")
     if search_letter:
-        terms_query = terms_query.filter(
-            Term.geo_word.ilike(f"{search_letter}%") |
-            Term.eng_word.ilike(f"{search_letter}%")
-        )
+        terms = terms.filter(Term.geo_word.ilike(f"{search_letter}%") | Term.eng_word.ilike(f"{search_letter}%"))
 
     categories = request.args.get("categories")
     if categories:
         categories = unquote(categories).split(",")
-        filtered_categories = Category.query.filter(
-            Category.id.in_(categories),
-            Category.is_active.is_(True)
-        ).all()  # Ensure filtered categories are active
-
-        # Join with TermCategory and filter based on category's active status as well
-        terms_query = terms_query.join(Term.category).filter(
-            Category.id.in_(categories),
-            Category.is_active.is_(True)  # Ensure category is active
-        )
-
-    # Filter terms whose associated categories (and their parents) are active
-    active_terms_query = terms_query.join(Term.category).filter(
-        Category.is_active.is_(True) & Category.id.in_(
-            [category.id for category in Category.query.all() if all(parent.is_active for parent in category.get_parents())]
-        )
-    )
+        filtered_categories = Category.query.filter(Category.id.in_(categories)).all()
+        terms = terms.join(Term.category).filter(Category.id.in_(categories))
 
     sort = request.args.get("sortType")
     if sort:
@@ -61,13 +36,11 @@ def home(page=1):
             "en": Term.eng_word,
             "recent": Term.id
         }
-        active_terms_query = active_terms_query.order_by(sort_map[sort].desc())
+        terms = terms.order_by(sort_map[sort].desc()) if sort == "recent" else terms.order_by(func.lower(sort_map[sort]).asc())
 
-    terms_paginated = active_terms_query.paginate(per_page=5, page=page)
-
-    print(search_letter, search_word, categories)
-
-    return render_template("main/main.html", terms=terms_paginated,
+    print(search_letter, search_word, categories, sort)
+    terms = terms.paginate(per_page=5, page=page)
+    return render_template("main/main.html", terms=terms,
                            root_categories=root_categories, filtered_categories=filtered_categories,
                            search_word=search_word, search_letter=search_letter)
 
@@ -84,13 +57,7 @@ def contact():
 
 @main_blueprint.route("/term_detail/<int:term_id>")
 def term_detail(term_id):
-    # Fetch the term by ID and ensure that it belongs to at least one active category
-    term = Term.query.filter(
-        Term.id == term_id,
-        Term.is_active.is_(True),  # Ensure the term itself is active
-        Term.category.any(Category.is_active.is_(True))  # Ensure the term belongs to an active category
-    ).first_or_404()
-
+    term = Term.query.filter(Term.id == term_id, Term.is_active == True, Term.category.any(Category.is_active == True)).first_or_404()
     return render_template("main/term_detail.html", term=term)
 
 

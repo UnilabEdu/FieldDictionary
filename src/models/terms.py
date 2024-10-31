@@ -44,14 +44,9 @@ class Term(BaseModel):
     def get_category_tree(self):
         category_trees = []
         for category in self.category:
-            parents = category.get_parents()
-            # Check if the current category and all parent categories are active
-            if category.is_active:
-                # Check all parents' active status
-                if all(parent.is_active for parent in parents):
-                    # Add parents and current category to the tree
-                    parents.append(category)
-                    category_trees.append(parents)
+            categories = category.get_parents()
+            categories.append(category)
+            category_trees.append(categories)
         return category_trees
 
 
@@ -83,22 +78,18 @@ class Category(BaseModel):
     # Establish the relationship between parent and child categories
     children = db.relationship('Category', backref=db.backref('parent', remote_side=[id]))
     
-    def get_descendants(self, include_inactive=False):
-        """ Return all descendants of the category, optionally filtering only active ones. """
+    def get_descendants(self):
         descendants = []
         for child in self.children:
-            # Only include the child if it's active or include_inactive is True
-            if child.is_active or include_inactive:
-                descendants.append(child)
-                descendants.extend(child.get_descendants(include_inactive=include_inactive))
+            descendants.append(child)
+            descendants.extend(child.get_descendants())
         return descendants
-    
+
     def get_parents(self):
         parents = []
         if self.parent:
-            if self.parent.is_active:
-                parents.append(self.parent)
-                parents.extend(self.parent.get_parents())
+            parents.append(self.parent)
+            parents.extend(self.parent.get_parents())
         return parents
     
     def __repr__(self):
