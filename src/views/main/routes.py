@@ -1,10 +1,10 @@
-from flask import render_template, Blueprint, redirect, url_for, request
+from flask import render_template, Blueprint, redirect, url_for, request, flash
 from flask_login import login_user, logout_user
 from urllib.parse import unquote
 from sqlalchemy import func
 
 from src.models import Term, Category, User, About
-from src.views.main.forms import LoginForm
+from src.views.main.forms import LoginForm, ContactForm
 
 main_blueprint = Blueprint("main", __name__)
 
@@ -12,10 +12,11 @@ main_blueprint = Blueprint("main", __name__)
 @main_blueprint.route("/")
 @main_blueprint.route("/page/<int:page>")
 def home(page=1):
+    items = About.query.all()
+    form = ContactForm()
     root_categories = Category.query.filter(Category.parent_id.is_(None), Category.is_active == True).all()
     filtered_categories = []
     terms = Term.query.filter(Term.is_active == True, Term.category.any(Category.is_active == True))
-    items = About.query.all()
     search_word = request.args.get("searchWord", "")
     if search_word:
         terms = terms.filter(Term.geo_word.ilike(f"%{search_word}%") | Term.eng_word.ilike(f"%{search_word}%") | Term.english_synonyms.ilike(f"%{search_word}%"))
@@ -43,26 +44,35 @@ def home(page=1):
     terms = terms.paginate(per_page=5, page=page)
     return render_template("main/main.html", terms=terms,
                            root_categories=root_categories, filtered_categories=filtered_categories,
-                           search_word=search_word, search_letter=search_letter, items=items)
+                           search_word=search_word, search_letter=search_letter, items=items, form=form)
 
 
 @main_blueprint.route("/about")
 def about():
     items = About.query.all()
-    return render_template('main/about.html', items=items)
+    form = ContactForm()
+    return render_template('main/about.html', items=items, form=form)
 
 
-@main_blueprint.route("/contact")
+@main_blueprint.route("/contact", methods=["GET", "POST"])
 def contact():
     items = About.query.all()
-    return render_template("main/contact.html", items=items)
+    form = ContactForm()
+    if form.validate_on_submit():
+        flash("შეტყობინება წარმატებით გაიგზავნა!", "success")
+        return redirect(url_for('main.home'))
+    elif form.is_submitted() and not form.validate():
+        flash("გთხოვთ შეავსოთ ყველა ველი სწორად.", "error")
+
+    return render_template("main/contact.html", items=items, form=form)
 
 
 @main_blueprint.route("/term_detail/<int:term_id>")
 def term_detail(term_id):
     items = About.query.all()
+    form = ContactForm()
     term = Term.query.filter(Term.id == term_id, Term.is_active == True, Term.category.any(Category.is_active == True)).first_or_404()
-    return render_template("main/term_detail.html", term=term, items=items)
+    return render_template("main/term_detail.html", term=term, items=items, form=form)
 
 
 @main_blueprint.route("/login", methods=["GET", "POST"])

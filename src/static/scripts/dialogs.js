@@ -75,7 +75,7 @@ let didSubmitContact = false
 
 contactForm?.addEventListener('submit', (e) => {
   console.log('submiti')
-  e.preventDefault()
+  
   didSubmitContact = true
 })
 

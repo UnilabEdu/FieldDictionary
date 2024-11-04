@@ -2,8 +2,9 @@
     <div class="footer-content width-limiter">
         <div class="sub-group">
             <label class="sub-label">გამოიწერეთ სიახლეები:</label>
-            <form class="base-field sub-input-container errorable-field" id="subscribe-form">
-                <input class="sub-input field-input" type="email" placeholder="ელ. ფოსტა"/>
+            <form class="base-field sub-input-container errorable-field" id="subscribe-form" method="POST" action="">
+                {{ form.hidden_tag() }}
+                <input class="sub-input field-input" type="email" placeholder="ელ. ფოსტა" value="{{ form.email.value }}"/>
                 <button class="sub-button">
                     <svg class="sub-button-img" width="24" height="24"
                          viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -11,7 +12,9 @@
                                 fill="#005CB8"/>
                     </svg>
                 </button>
-                <span>მითითებული ელ. ფოსტა არასწორია</span>
+                {% for error in form.email.errors %}
+                    <span>{{ error }}</span>
+                {% endfor %}
             </form>
         </div>
         <div class="partner-group">
