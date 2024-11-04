@@ -9,8 +9,8 @@
             <img class="menu-img" src="{{ url_for('static', filename='images/burger.svg') }}" alt="menu"/>
         </button>
         <nav class="desktop-nav">
-            <a href="{{ url_for('main.about') }}" class="{{  is_active("about") }}">ლექსიკონის შესახებ</a>
-            <a href="{{ url_for('main.contact') }}" class="{{ is_active("contact") }}">კონტაქტი</a>
+            <a href="{{ url_for('main.about') }}" class="{{  is_active('about') }}">ლექსიკონის შესახებ</a>
+            <a href="{{ url_for('main.contact') }}" class="{{ is_active('contact') }}">კონტაქტი</a>
         </nav>
     </div>
 </header>

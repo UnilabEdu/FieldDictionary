@@ -8,8 +8,9 @@ from src.views import main_blueprint
 from src.admin import admin
 from src.admin.term import TermView, CategoryView
 from src.admin.user import UserView
+from src.admin.about import AboutView
 from src.commands import init_db, populate_db
-from src.models import User, Term, Category
+from src.models import User, Term, Category, About
 
 COMMANDS = [
     init_db,
@@ -52,6 +53,7 @@ def register_extensions(app):
     admin.add_view(TermView(Term, db.session, endpoint="term_panel", name="ტერმინები"))
     admin.add_view(CategoryView(Category, db.session, endpoint="category", name="დარგები"))
     admin.add_view(UserView(User, db.session, name="მომხმარებელი"))
+    admin.add_view(AboutView(About, db.session, name="გვერდის შესახებ"))
 
 
 def register_commands(app):
