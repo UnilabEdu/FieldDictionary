@@ -54,7 +54,7 @@
                                 {% for tree in category_trees %}
                                     <div class="field">
                                         {% for category in tree %}
-                                            <a href="{{ url_for('main.home', categories=category.id) }}">
+                                            <a href="{{ url_for('main.home', categories=category.id) }}" style="display: inline-block;">
                                                 {{ category.name }}
                                             </a>
                                             {% if not loop.last %}
@@ -254,8 +254,8 @@
                 {% else %}
                     <section class="not-found-container">
                         <h1 class="not-found-title">ტერმინი ვერ მოიძებნა</h1>
-                        <button href="/" class="base-button secondary-button">
-                            მოითხოვე ტერმინის დამატება
+                        <button>
+                            <a href="{{ url_for('main.contact') }}" class="base-button secondary-button">მოითხოვე ტერმინის დამატება</a>
                         </button>
                     </section>
                 {% endif %}

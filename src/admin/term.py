@@ -26,7 +26,7 @@ class CategoryView(SecureModelView):
 
     column_searchable_list = ['name']
     column_sortable_list = ['name']
-    column_default_sort = ('name', True)
+    column_default_sort = ('name', False)
     column_filters = ['name', 'is_active']
 
 
@@ -40,7 +40,7 @@ class TermView(SecureModelView):
     edit_template = 'admin/edit.html'
 
     column_filters = ["geo_word", "eng_word", "is_active"]
-    column_default_sort = ("geo_word", True)
+    column_default_sort = ("geo_word", False)
 
     column_list = [
         "geo_word",
