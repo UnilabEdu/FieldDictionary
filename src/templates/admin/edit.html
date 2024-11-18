@@ -4,8 +4,8 @@
     {{ super() }} <!-- Ensures other admin scripts are loaded -->
     {{ ckeditor.load() }} <!-- Loads CKEditor scripts -->
     
-    {{ ckeditor.config(name='context_source') }}
-    {{ ckeditor.config(name='term_source') }}
-    {{ ckeditor.config(name='definition_source') }}
+    {{ ckeditor.config(name='context_source', custom_config="autoParagraph: false, enterMode: CKEDITOR.ENTER_BR") }}
+    {{ ckeditor.config(name='term_source', custom_config="autoParagraph: false, enterMode: CKEDITOR.ENTER_BR") }}
+    {{ ckeditor.config(name='definition_source', custom_config="autoParagraph: false, enterMode: CKEDITOR.ENTER_BR") }}
     {{ ckeditor.config(name='logo_link') }}
 {% endblock %}

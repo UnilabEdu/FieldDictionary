@@ -7,21 +7,53 @@ for (let button of termButtons) {
 
         let domElement = document.getElementById(button.dataset.target)
         domElement.classList.toggle("active");
+
+        let allButton = document.querySelector(`.term-button[data-target="${button.dataset.target.split("-")[1]}"]`)
+        if (allButton.classList.contains("active")) {
+            allButton.classList.remove("active")
+        }
     })
 }
 
 for (let button of toggleAllButtons) {
     button.addEventListener("click", () => {
-        button.classList.toggle("active")
-
         let definitionElement = document.getElementById(`definition-${button.dataset.target}`)
         let contextElement = document.getElementById(`context-${button.dataset.target}`)
         let commentElement = document.getElementById(`comment-${button.dataset.target}`)
         let synonymElement = document.getElementById(`connected-${button.dataset.target}`)
-        definitionElement.classList.toggle("active");
-        contextElement.classList.toggle("active");
-        commentElement.classList.toggle("active");
-        synonymElement.classList.toggle("active");
+
+        let definitionBtn = document.querySelector(`.term-button[data-target="definition-${button.dataset.target}"]`)
+        let contextBtn = document.querySelector(`.term-button[data-target="context-${button.dataset.target}"]`)
+        let commentBtn = document.querySelector(`.term-button[data-target="comment-${button.dataset.target}"]`)
+        let synonymBtn = document.querySelector(`.term-button[data-target="connected-${button.dataset.target}"]`)
+
+        if (button.classList.contains("active")) {
+            definitionElement.classList.remove("active");
+            contextElement.classList.remove("active");
+            commentElement.classList.remove("active");
+            synonymElement.classList.remove("active");
+
+            definitionBtn.classList.remove("active");
+            contextBtn.classList.remove("active");
+            commentBtn.classList.remove("active");
+            synonymBtn.classList.remove("active");
+
+            button.classList.remove("active")
+        }
+        else
+        {
+            definitionElement.classList.add("active");
+            contextElement.classList.add("active");
+            commentElement.classList.add("active");
+            synonymElement.classList.add("active");
+
+            definitionBtn.classList.add("active");
+            contextBtn.classList.add("active");
+            commentBtn.classList.add("active");
+            synonymBtn.classList.add("active");
+
+            button.classList.add("active")
+        }
     })
 }
 

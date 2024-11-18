@@ -12,13 +12,9 @@
             <section class="about-container">
                 <h1 class="about-title">ლექსიკონის შესახებ</h1>
                 <p class="about-text">
-                    {% if items %}
-                        {% for item in items %}
-                            {{ item.about_text }}
-                        {% endfor %}
-                    {% else %}
-                        <p>No information available.</p>
-                    {% endif %}
+                     {% for item in items %}
+                        {{ item.about_text }}
+                    {% endfor %}
                 </p>
             </section>
         </main>
