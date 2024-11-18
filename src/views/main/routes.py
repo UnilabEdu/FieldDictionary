@@ -13,7 +13,6 @@ main_blueprint = Blueprint("main", __name__)
 @main_blueprint.route("/page/<int:page>")
 def home(page=1):
     items = About.query.all()
-    form = ContactForm()
     root_categories = Category.query.filter(Category.parent_id.is_(None), Category.is_active == True).all()
     filtered_categories = []
     terms = Term.query.filter(Term.is_active == True, Term.category.any(Category.is_active == True))
@@ -44,14 +43,13 @@ def home(page=1):
     terms = terms.paginate(per_page=5, page=page)
     return render_template("main/main.html", terms=terms,
                            root_categories=root_categories, filtered_categories=filtered_categories,
-                           search_word=search_word, search_letter=search_letter, items=items, form=form)
+                           search_word=search_word, search_letter=search_letter, items=items)
 
 
 @main_blueprint.route("/about")
 def about():
     items = About.query.all()
-    form = ContactForm()
-    return render_template('main/about.html', items=items, form=form)
+    return render_template('main/about.html', items=items)
 
 
 @main_blueprint.route("/contact", methods=["GET", "POST"])
@@ -70,9 +68,8 @@ def contact():
 @main_blueprint.route("/term_detail/<int:term_id>")
 def term_detail(term_id):
     items = About.query.all()
-    form = ContactForm()
     term = Term.query.filter(Term.id == term_id, Term.is_active == True, Term.category.any(Category.is_active == True)).first_or_404()
-    return render_template("main/term_detail.html", term=term, items=items, form=form)
+    return render_template("main/term_detail.html", term=term, items=items)
 
 
 @main_blueprint.route("/login", methods=["GET", "POST"])
@@ -92,11 +89,7 @@ def login():
         else:
             error_message = "Incorrect username or password! Please try again."
 
-    return render_template(
-        "main/login.html",
-        form=form,
-        error_message=error_message,
-    )
+    return render_template("main/login.html", form=form, error_message=error_message,)
 
 
 @main_blueprint.route("/logout", methods=["GET", "POST"])

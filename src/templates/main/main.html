@@ -54,7 +54,8 @@
                                 {% for tree in category_trees %}
                                     <div class="field">
                                         {% for category in tree %}
-                                            <a href="{{ url_for('main.home', categories=category.id) }}," style="display: inline-block;">
+                                            <a href="{{ url_for('main.home', categories=category.id) }},"
+                                               style="display: inline-block;">
                                                 {{ category.name }}
                                             </a>
                                             {% if not loop.last %}
@@ -70,7 +71,7 @@
                                 <span class="word-type">{{ term.grammar_form }}</span>
                                 <p class="term-source">
                                     <span class="term-source-label">ტერმინის წყარო:</span>
-                                    {{ term.context_source | safe }}
+                                    {{ term.term_source | safe }}
                                 </p>
                                 <section class="term-controls">
                                     <button class="term-button definition-button" title="განმარტების ჩვენება"
@@ -143,53 +144,67 @@
                                         </svg>
                                     </button>
                                 </section>
-                                <section class="term-group" id="definition-{{ term.id }}">
-                                    <h4 class="term-group-title">განმარტება</h4>
-                                    <p class="term-group-text">{{ term.definition }}</p>
-                                </section>
-                                <section class="term-group" id="context-{{ term.id }}">
-                                    <h4 class="term-group-title">კონტექსტი</h4>
-                                    <p class="term-group-text">{{ term.context }}</p>
-                                    <div class="term-group-sources">
-                                        <span class="context-label">კონტექსტის წყარო:</span>
-                                        <div class="term-context-source">
-                                            {{ term.context_source | safe }}
-                                        </div>
-                                    </div>
-                                </section>
-                                <section class="term-group" id="connected-{{ term.id }}">
-                                    {% set synonyms = term.get_synonyms() %}
-                                    {% set connected_terms = term.get_related_terms() %}
-                                    {% if synonyms %}
-                                        <div>
-                                            <h4 class="term-group-title">სინონიმები</h4>
-                                            <div>
-                                                {% for synonym in synonyms %}
-                                                    <a href="{{ url_for('main.term_detail', term_id=synonym.id) }}">
-                                                        {{ synonym.geo_word }}
-                                                    </a>
-                                                {% endfor %}
+                                {% if term.definition %}
+                                    <section class="term-group" id="definition-{{ term.id }}">
+                                        <h4 class="term-group-title">განმარტება</h4>
+                                        <p class="term-group-text">{{ term.definition }}</p>
+                                    </section>
+                                {% endif %}
+
+                                {% if term.context %}
+                                    <section class="term-group" id="context-{{ term.id }}">
+                                        <h4 class="term-group-title">კონტექსტი</h4>
+                                        <p class="term-group-text">{{ term.context }}</p>
+                                        <div class="term-group-sources">
+                                            <span class="context-label">კონტექსტის წყარო:</span>
+                                            <div class="term-context-source">
+                                                {{ term.context_source | safe }}
                                             </div>
                                         </div>
-                                    {% endif %}
-                                    {% if connected_terms %}
-                                        <div>
-                                            <h4 class="term-group-title">დაკავშირებული სიტყვები</h4>
+                                    </section>
+                                {% endif %}
+
+                                {% if not term.has_synonyms_or_relations() %}
+                                    <section class="term-group" id="connected-{{ term.id }}">
+                                        {% set synonyms = term.get_synonyms() %}
+                                        {% set connected_terms = term.get_related_terms() %}
+                                        {% if synonyms %}
                                             <div>
-                                                {% for connected_term in connected_terms %}
-                                                    <a href="{{ url_for('main.term_detail', term_id=connected_term.id) }}">
-                                                        {{ connected_term.geo_word }}
-                                                    </a>
-                                                {% endfor %}
+                                                <h4 class="term-group-title">სინონიმები</h4>
+                                                <div>
+                                                    {% for synonym in synonyms %}
+                                                        <a href="{{ url_for('main.term_detail', term_id=synonym.id) }}">
+                                                            {{ synonym.geo_word }}
+                                                        </a>
+                                                    {% endfor %}
+                                                </div>
                                             </div>
-                                        </div>
-                                    {% endif %}
-                                </section>
-                                <section class="term-group" id="comment-{{ term.id }}">
-                                    <h4 class="term-group-title">კომენტარი</h4>
-                                    <p class="term-group-text">{{ term.comment }}</p>
-                                </section>
+                                        {% endif %}
+
+                                        {% if connected_terms %}
+                                            <div>
+                                                <h4 class="term-group-title">დაკავშირებული სიტყვები</h4>
+                                                <div>
+                                                    {% for connected_term in connected_terms %}
+                                                        <a href="{{ url_for('main.term_detail', term_id=connected_term.id) }}">
+                                                            {{ connected_term.geo_word }}
+                                                        </a>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+
+                                    </section>
+                                {% endif %}
+
+                                {% if term.comment %}
+                                    <section class="term-group" id="comment-{{ term.id }}">
+                                        <h4 class="term-group-title">კომენტარი</h4>
+                                        <p class="term-group-text">{{ term.comment }}</p>
+                                    </section>
+                                {% endif %}
                             </article>
+
                         {% endfor %}
 
                         <!--<article class="term-card">
@@ -255,7 +270,8 @@
                     <section class="not-found-container">
                         <h1 class="not-found-title">ტერმინი ვერ მოიძებნა</h1>
                         <button>
-                            <a href="{{ url_for('main.contact') }}" class="base-button secondary-button">მოითხოვე ტერმინის დამატება</a>
+                            <a href="{{ url_for('main.contact') }}" class="base-button secondary-button">მოითხოვე
+                                ტერმინის დამატება</a>
                         </button>
                     </section>
                 {% endif %}

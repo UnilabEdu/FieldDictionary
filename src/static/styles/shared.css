@@ -194,11 +194,6 @@
 
 .footer-content {
   display: flex;
-  width: 100%;
-  justify-content: space-between;
-  flex-direction: column;
-  align-items: start;
-  gap: 24px;
 }
 
 .footer .sub-group {
@@ -251,7 +246,7 @@
 
 .footer .partner-group {
   display: flex;
-  align-items: start;
+  align-items: center;
   flex-direction: column;
   justify-content: center;
   gap: 10px;
@@ -612,14 +607,8 @@ dialog .info-text {
   }
 
   .footer {
-    align-items: start;
     padding-top: 30px;
     padding-bottom: 30px;
-  }
-
-  .footer-content {
-    flex-direction: row;
-    align-items: center;
   }
 
   .footer .sub-group {
@@ -646,10 +635,6 @@ dialog .info-text {
 
   dialog .info-text {
     font-size: 24px;
-  }
-
-  .footer .copyright {
-    text-align: left;
   }
 }
 

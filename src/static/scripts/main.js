@@ -28,10 +28,10 @@ for (let button of toggleAllButtons) {
         let synonymBtn = document.querySelector(`.term-button[data-target="connected-${button.dataset.target}"]`)
 
         if (button.classList.contains("active")) {
-            definitionElement.classList.remove("active");
-            contextElement.classList.remove("active");
-            commentElement.classList.remove("active");
-            synonymElement.classList.remove("active");
+            definitionElement?.classList.remove("active");
+            contextElement?.classList.remove("active");
+            commentElement?.classList.remove("active");
+            synonymElement?.classList.remove("active");
 
             definitionBtn.classList.remove("active");
             contextBtn.classList.remove("active");
@@ -42,10 +42,10 @@ for (let button of toggleAllButtons) {
         }
         else
         {
-            definitionElement.classList.add("active");
-            contextElement.classList.add("active");
-            commentElement.classList.add("active");
-            synonymElement.classList.add("active");
+            definitionElement?.classList.add("active");
+            contextElement?.classList.add("active");
+            commentElement?.classList.add("active");
+            synonymElement?.classList.add("active");
 
             definitionBtn.classList.add("active");
             contextBtn.classList.add("active");
