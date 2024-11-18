@@ -1,7 +1,12 @@
 from random import sample, randint
 from flask.cli import with_appcontext
 import click
+from openpyxl import load_workbook
+from os import path
 
+from openpyxl.cell.rich_text import CellRichText
+
+from src.config import Config
 from src.extensions import db
 from src.models import Term, TermCategory, Category, ConnectedTerm, User
 
@@ -18,45 +23,91 @@ def init_db():
 @click.command("populate_db")
 @with_appcontext
 def populate_db():
-    click.echo("Creating categories...")
+    filepath = path.join(Config.BASE_DIRECTORY, "IATGE.xlsx")
+    workbook = load_workbook(filepath, rich_text=True)
+    worksheet = workbook.worksheets[0]
 
-    # Root categories
-    category1 = Category(name="მეცნიერება")
-    category2 = Category(name="ტექნიკა")
-    category3 = Category(name="ბუნება")
+    existing_categories = {category.name: category.id for category in Category.query.all()}
+    for row in worksheet.iter_rows(min_row=2):
 
-    # Child categories
-    category4 = Category(name="ფიზიკა", parent=category1)
-    category5 = Category(name="მათემატიკა", parent=category1)
-    category6 = Category(name="გეოგრაფია", parent=category1)
+        def rich_to_html(row):
+            text = ""
+            if isinstance(row.value, CellRichText):
+                hyperlink = row.hyperlink.target if row.hyperlink is not None else "#"
+                for text_block in row.value:
+                    if text_block.font.color.value == "FF0070C0":
+                        text += f'<a href="{hyperlink}" target="_blank">{text_block.text}</a>'
+                    else:
+                        text += text_block.text.replace("-", "\n", 1)
+            else:
+                text = row
+            return str(text)
 
-    # Further nested categories
-    category7 = Category(name="ალგებრა", parent=category5)
-    category8 = Category(name="გეომეტრია", parent=category5)
+        term_source = rich_to_html(row[6])
+        definition_source = rich_to_html(row[8])
+        context_source = rich_to_html(row[10])
 
-    categories = [category1, category2, category3, category4, category5, category6, category7, category8]
+        new_term = Term(geo_word=str(row[3].value), eng_word=str(row[2].value), grammar_form=str(row[4].value),
+                        term_source=term_source,
+                        definition=str(row[7].value), definition_source=definition_source,
+                        context=str(row[9].value), context_source=context_source,
+                        comment=str(row[12].value))
+        new_term.create(commit=False, flush=True)
 
-    for category in categories:
-        category.create()
+        categories = str(row[0].value)
+        subcategories = str(row[1].value)
+        for category in categories.split("-"):
+            category = category.strip()
+            if not category:
+                continue
 
-    click.echo("Created categories!")
-    for i in range(1, 50):
-        term = Term(geo_word=f"ქართული {i}", eng_word=f"English {i}", grammar_form="ზმნა", stylistic_label="შესაბამისი კვალიფიკაცია", term_source="google.com",
-                    definition="შემთხვევითად გენერირებული ტექსტი ეხმარება დიზაინერებს და ტიპოგრაფიული ნაწარმის შემქმნელებს, "
-                               "რეალურთან მაქსიმალურად მიახლოებული შაბლონი წარუდგინონ შემფასებელს. ხშირადაა შემთხვევა, "
-                               "როდესაც დიზაინის შესრულებისას საჩვენებელია, თუ როგორი იქნება ტექსტის ბლოკი. სწორედ ასეთ დროს "
-                               "არის მოსახერხებელი ამ გენერატორით შექმნილი ტექსტის გამოყენება, რადგან უბრალოდ „ტექსტი ტექსტი "
-                               "ტექსტი“ ან სხვა გამეორებადი სიტყვების ჩაყრა, ხელოვნურ ვიზუალურ სიმეტრიას ქმნის და "
-                               "არაბუნებრივად გამოიყურება.",
-                    definition_source="google.com", term_type="სლენგი", context=f"ეს არის კონტექსტი {i}",
-                    context_source="google.com", comment="ეს არის კომენტარი", category=sample(categories, 1))
-        term.create()
+            if category not in existing_categories:
+                new_category = Category(name=category)
+                new_category.create(commit=False, flush=True)
+                existing_categories[category] = new_category.id
 
-    click.echo("Created terms!")
-    for i in range(1, 10):
-        connected_term = ConnectedTerm(term1_id=i, term2_id=randint(11, 50), is_synonym=randint(0, 1))
-        connected_term.create()
-    click.echo("Created connected terms!")
+            # If subcategory column is empty
+            if not subcategories or subcategories == "None":
+                term_category = TermCategory(term_id=new_term.id, category_id=existing_categories[category])
+                term_category.create(commit=False)
+
+        children_subcategories = subcategories.split("|")
+        for index, subcategory in enumerate(children_subcategories):
+            subcategory = subcategory.strip()
+            if "\n" in subcategory or not subcategory or subcategory == "None":
+                continue
+
+            if subcategory not in existing_categories:
+                if index == 0:
+                    parent_id = existing_categories[str(row[0].value)]
+                else:
+                    parent_id = existing_categories[children_subcategories[index-1]]
+
+                new_category = Category(name=subcategory, parent_id=parent_id)
+                new_category.create(commit=False, flush=True)
+                existing_categories[subcategory] = new_category.id
+
+            # For child categories, only save LAST child to term
+            if index == len(children_subcategories) - 1:
+                term_category = TermCategory(term_id=new_term.id, category_id=existing_categories[subcategory])
+                term_category.create(commit=False)
+
+        related_subcategories = subcategories.split("-")
+        for subcategory in related_subcategories:
+            subcategory = subcategory.strip()
+            if "|" in subcategory or not subcategory or subcategory == "None":
+                continue
+
+            if subcategory not in existing_categories:
+                parent_id = existing_categories[str(row[0].value)]
+                new_category = Category(name=subcategory, parent_id=parent_id)
+                new_category.create(commit=False, flush=True)
+                existing_categories[subcategory] = new_category.id
+
+            # For multiple related categories, save ALL of them to term
+            term_category = TermCategory(term_id=new_term.id, category_id=existing_categories[subcategory])
+            term_category.create(commit=False)
+    db.session.commit()
 
     click.echo("Creating admin user...")
     admin = User(username="admin", password="admin123", email="testuser@gmail.com")
