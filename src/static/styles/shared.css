@@ -415,8 +415,13 @@ dialog[open]::backdrop {
   transition: border 250ms ease-out;
 }
 
-.errorable-field.touched:has(.field-input:invalid) {
+.errorable-field.touched:has(.field-input:invalid),
+.errorable-field:has(.server-field-error) {
   border: 1.2px solid rgb(var(--color-red));
+}
+
+.errorable-field:has(.server-field-error) {
+  margin-bottom: 20px;
 }
 
 .errorable-field input::placeholder {
@@ -442,12 +447,15 @@ dialog[open]::backdrop {
   transform: translateY(100%);
   color: rgb(var(--color-red));
   font-size: 12px;
-  opacity: 0;
-  pointer-events: none;
   transition: opacity 250ms ease-out;
 }
 
-.errorable-field.touched:has(.field-input:invalid) span {
+.client-field-error {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.errorable-field.touched:has(.field-input:invalid) .client-field-error {
   opacity: 1;
   pointer-events: all;
 }
