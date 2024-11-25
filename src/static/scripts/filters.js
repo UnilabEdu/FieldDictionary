@@ -4,6 +4,8 @@ const checkboxGroups = document.querySelectorAll(".checkbox-group");
 
 const searchLetterInput = filterContent.querySelector("#checkbox-search-field");
 
+let matchCount = 0;
+
 searchLetterInput.addEventListener("keyup", searchFilters);
 
 checkboxGroups.forEach((checkboxGroup) => {
@@ -188,7 +190,9 @@ function searchFilters() {
 
   const query = searchLetterInput.value;
 
+  matchCount = 0;
   matchChildren(query, rootCheckboxGroups);
+  adjustSearchFieldStyle()
 }
 
 function recMatchFilter(query, rootEl) {
@@ -225,7 +229,6 @@ function recMatchFilter(query, rootEl) {
       checkboxButton.style.display = "none";
     }
 
-
     // to close all sublists when empty query is given
     if (query.length === 0) {
       if (rootEl.classList.contains("open")) {
@@ -233,6 +236,8 @@ function recMatchFilter(query, rootEl) {
       }
     }
   }
+
+  matchCount += didMatch;
 
   return didMatch;
 }
@@ -251,4 +256,16 @@ function matchChildren(query, elements) {
 // using very basic match algo for now
 function matchString(qeury, str) {
   return str.startsWith(qeury);
+}
+
+function adjustSearchFieldStyle() {
+  const searchContainer = filterContent.querySelector(
+    "#checkbox-search-container",
+  );
+
+  if (matchCount === 0) {
+    searchContainer.style.marginBottom = "0";
+  } else {
+    searchContainer.style.marginBottom = "20px";
+  }
 }
