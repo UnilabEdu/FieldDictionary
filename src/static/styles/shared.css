@@ -324,6 +324,16 @@
   pointer-events: none;
 }
 
+.abbreviation{
+  text-decoration: none;
+  color: rgb(var(--color-green));
+  cursor: text;
+}
+
+.abbreviation .abbreviation{
+  pointer-events: none;
+}
+
 /*   Closed state of the dialog   */
 dialog {
   display: hidden;
