@@ -15,6 +15,7 @@
                     {{ form.first_name.label }}
                     <div class="base-field contact-field input-container errorable-field">
                         {{ form.first_name(class="contact-input field-input") }}
+                        <span class="client-field-error"></span>
                         {% if form.first_name.errors %}
                             <span class="server-field-error">{{ form.first_name.errors[0] }}</span>
                         {% endif %}
@@ -24,6 +25,7 @@
                     {{ form.last_name.label }}
                     <div class="base-field contact-field input-container errorable-field">
                         {{ form.last_name(class="contact-input field-input") }}
+                        <span class="client-field-error"></span>
                         {% if form.last_name.errors %}
                             <span class="server-field-error">{{ form.last_name.errors[0] }}</span>
                         {% endif %}
@@ -33,6 +35,7 @@
                     {{ form.email.label }}
                     <div class="base-field contact-field input-container errorable-field">
                         {{ form.email(class="contact-input field-input") }}
+                        <span class="client-field-error"></span>
                         {% if form.email.errors %}
                             <span class="server-field-error">{{ form.email.errors[0] }}</span>
                         {% endif %}
@@ -42,6 +45,7 @@
                     {{ form.subject.label }}
                     <div class="base-field contact-field input-container errorable-field">
                         {{ form.subject(class="contact-input field-input") }}
+                        <span class="client-field-error"></span>
                         {% if form.subject.errors %}
                             <span class="server-field-error">{{ form.subject.errors[0] }}</span>
                         {% endif %}
@@ -51,6 +55,7 @@
                     {{ form.text.label }}
                     <div class="base-field contact-field input-container errorable-field">
                         {{ form.text(class="contact-input field-input") }}
+                        <span class="client-field-error"></span>
                         {% if form.text.errors %}
                             <span class="server-field-error">{{ form.text.errors[0] }}</span>
                         {% endif %}
