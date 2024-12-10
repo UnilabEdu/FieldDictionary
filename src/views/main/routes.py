@@ -2,6 +2,7 @@ from flask import render_template, Blueprint, redirect, url_for, request, flash
 from flask_login import login_user, logout_user
 from urllib.parse import unquote
 from sqlalchemy import func
+import re
 
 from src.models import Term, Category, User, About
 from src.views.main.forms import LoginForm, ContactForm
@@ -18,7 +19,10 @@ def home(page=1):
     terms = Term.query.filter(Term.is_active == True, Term.category.any(Category.is_active == True))
     search_word = request.args.get("searchWord", "")
     if search_word:
-        terms = terms.filter(Term.geo_word.ilike(f"%{search_word}%") | Term.eng_word.ilike(f"%{search_word}%") | Term.english_synonyms.ilike(f"%{search_word}%"))
+        if re.match("[A-Za-z0-9 .]+$", search_word):
+            terms = terms.filter(Term.definition.ilike(f"%{search_word}%") | Term.eng_word.ilike(f"%{search_word}%") | Term.english_synonyms.ilike(f"%{search_word}%"))
+        else:
+            terms = terms.filter(Term.geo_word.ilike(f"%{search_word}%"))
 
     search_letter = request.args.get("searchLetter", "")
     if search_letter:
