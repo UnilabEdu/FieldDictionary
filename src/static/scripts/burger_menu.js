@@ -35,8 +35,8 @@ function handleBurgerMenuGeneration() {
   window.onresize = handleBurgerMenuGeneration
   
   const links = [
-    { name: 'ლექსიკონის შესახებ', link: '/about.html' },
-    { name: 'კონტაქტი', link: '/contact.html' },
+    { name: 'ლექსიკონის შესახებ', link: '/about' },
+    { name: 'კონტაქტი', link: '/contact' },
   ]
   
   function generateBurgerMenu() {

@@ -1,4 +1,5 @@
 {% extends 'layouts/base.html' %}
+{% from "macros.html" import render_subcategories %}
 
 {% block title %}
     ტერმინის შიდა გვერდი
@@ -12,19 +13,18 @@
         <main class="main-content width-limiter">
             <article class="term-word-container">
                 <h1 class="term-word-detail">{{ term.eng_word }} - {{ term.geo_word }}</h1>
-                {% set category_trees = term.get_category_tree() %}
-                {% for tree in category_trees %}
-                    <div class="term-field">
-                        {% for category in tree %}
-                            <a href="{{ url_for('main.home', categories=category.id) }}" style="display: inline-block;">
-                                {{ category.name }}
-                            </a>
-                            {% if not loop.last %}
-                                &gt;
-                            {% endif %}
+                {% set categories = term.get_category_tree() %}
+                {% for category in categories.keys() %}
+                    <div class="field">
+                        <a href="{{ url_for('main.home', categories=category.id) }}," style="display: inline-block;">
+                            {{ category.name }}
+                        </a>
+                        {% for subcategory in categories.values() if subcategory %}
+                            > {{ render_subcategories(subcategory) }}
                         {% endfor %}
                     </div>
                 {% endfor %}
+
                 <div class="term-word-type abbr-support">{{ term.grammar_form }}</div>
                 <div class="term-qualifications">შესაბამისი კვალიფიკაცია</div>
 

@@ -40,14 +40,22 @@ class Term(BaseModel):
     def has_synonyms_or_relations(self):
         connections = ConnectedTerm.query.filter((ConnectedTerm.term1_id == self.id) | (ConnectedTerm.term2_id == self.id)).first()
         return connections != None
-    
+
     def get_category_tree(self):
         category_trees = []
         for category in self.category:
             categories = category.get_parents()
             categories.append(category)
             category_trees.append(categories)
-        return category_trees
+
+        branched_tree = {}
+        for category_tree in category_trees:
+            current_dict = branched_tree
+            for category in category_tree:
+                if category not in current_dict:
+                    current_dict[category] = {}
+                current_dict = current_dict[category]
+        return branched_tree
 
 
 
@@ -76,8 +84,8 @@ class Category(BaseModel):
     is_active = db.Column(db.Boolean, default=True)
 
     # Establish the relationship between parent and child categories
-    children = db.relationship('Category', backref=db.backref('parent', remote_side=[id]))
-    
+    children = db.relationship('Category', backref=db.backref('parent', remote_side=[id]), order_by="Category.name.asc()")
+
     def get_descendants(self):
         descendants = []
         for child in self.children:
@@ -88,8 +96,8 @@ class Category(BaseModel):
     def get_parents(self):
         parents = []
         if self.parent:
-            parents.append(self.parent)
             parents.extend(self.parent.get_parents())
+            parents.append(self.parent)
         return parents
     
     def __repr__(self):
