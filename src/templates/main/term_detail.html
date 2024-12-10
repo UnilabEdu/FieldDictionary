@@ -26,7 +26,7 @@
                 {% endfor %}
 
                 <div class="term-word-type abbr-support">{{ term.grammar_form }}</div>
-                <div class="term-qualifications">შესაბამისი კვალიფიკაცია</div>
+                <div class="term-qualifications"> {{ term.stylistic_label }}</div>
 
                 {% if term.term_source %}
                     <section class="term-source">
@@ -77,6 +77,9 @@
                             {% for synonym in synonyms %}
                                 <li>
                                     <a href="{{ url_for('main.term_detail', term_id=synonym.id) }}">{{ synonym.geo_word }}</a>
+                                    {%- if not loop.last -%}
+                                        ,
+                                    {% endif %}
                                 </li>
                             {% endfor %}
                         </ul>

@@ -168,7 +168,7 @@
             </section>
         {% endif %}
 
-        {% if not term.has_synonyms_or_relations() %}
+        {% if term.has_synonyms_or_relations() %}
             <section class="term-group" id="connected-{{ term.id }}">
                 {% set synonyms = term.get_synonyms() %}
                 {% set connected_terms = term.get_related_terms() %}
@@ -178,7 +178,7 @@
                         <div>
                             {% for synonym in synonyms %}
                                 <a href="{{ url_for('main.term_detail', term_id=synonym.id) }}">
-                                    {{ synonym.geo_word }}
+                                    {{ synonym.geo_word }} {%- if not loop.last -%},{% endif %}
                                 </a>
                             {% endfor %}
                         </div>
@@ -191,7 +191,7 @@
                         <div>
                             {% for connected_term in connected_terms %}
                                 <a href="{{ url_for('main.term_detail', term_id=connected_term.id) }}">
-                                    {{ connected_term.geo_word }}
+                                    {{ connected_term.geo_word }} {%- if not loop.last -%},{% endif %}
                                 </a>
                             {% endfor %}
                         </div>
