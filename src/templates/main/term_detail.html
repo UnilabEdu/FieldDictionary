@@ -38,7 +38,7 @@
                 {# No need to check definition, there will always be one #}
                 <section class="term-definition">
                     <h2>განმარტება:</h2>
-                    <p class="abbr-support"> {{ term.definition }} </p>
+                    <p class="abbr-support"> {{ term.definition|safe }} </p>
                 </section>
 
                 {% if term.definition_source %}
