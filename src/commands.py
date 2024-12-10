@@ -23,42 +23,75 @@ def init_db():
 @click.command("populate_db")
 @with_appcontext
 def populate_db():
-    filepath = path.join(Config.BASE_DIRECTORY, "IATGE.xlsx")
+    filepath = path.join(Config.BASE_DIRECTORY, "IATGE2.xlsx")
     workbook = load_workbook(filepath, rich_text=True)
     worksheet = workbook.worksheets[0]
 
     existing_categories = {category.name: category.id for category in Category.query.all()}
-    for row in worksheet.iter_rows(min_row=2):
 
+    for row in worksheet.iter_rows(min_row=2):
         def rich_to_html(row):
             text = ""
             if isinstance(row.value, CellRichText):
                 hyperlink = row.hyperlink.target if row.hyperlink is not None else "#"
                 for text_block in row.value:
+                    text_value = text_block.text
+                    if text_block.font.italic:
+                        text_value = f"<i>{text_value}</i>"
+
+                    if text_block.font.bold:
+                        text_value = f"<b>{text_value}</b>"
+
                     if text_block.font.color.value == "FF0070C0":
-                        text += f'<a href="{hyperlink}" target="_blank">{text_block.text}</a>'
+                        text_value = f'<a href="{hyperlink}" target="_blank">{text_value}</a>'
                     else:
-                        text += text_block.text.replace("-", "\n", 1)
+                        text_value = text_value.replace("-", "\n", 1)
+                    text += text_value
             else:
-                text = row
-            return str(text)
+                text = row.value
+            return text
+
+        if "=" in row[3].value:
+            existing_term = Term.query.filter(Term.eng_word == row[3].value.replace("=", "").strip()).first()
+            if existing_term.english_synonyms:
+                existing_term.english_synonyms += f", {row[3].value.replace('=', '').strip()}"
+            else:
+                existing_term.english_synonyms = row[3].value.replace("=", "").strip()
+            existing_term.save()
+            continue
 
         term_source = rich_to_html(row[6])
         definition_source = rich_to_html(row[8])
+        definition = rich_to_html(row[7])
         context_source = rich_to_html(row[10])
+        context = rich_to_html(row[9])
 
-        new_term = Term(geo_word=str(row[3].value), eng_word=str(row[2].value), grammar_form=str(row[4].value),
-                        term_source=term_source,
-                        definition=str(row[7].value), definition_source=definition_source,
-                        context=str(row[9].value), context_source=context_source,
-                        comment=str(row[12].value))
-        new_term.create(commit=False, flush=True)
+        new_term = Term(geo_word=row[3].value, eng_word=row[2].value, grammar_form=row[4].value,
+                        term_source=term_source, stylistic_label = row[5].value,
+                        definition=definition, definition_source=definition_source,
+                        context=context, context_source=context_source,
+                        comment=row[14].value)
+        new_term.create()
 
-        categories = str(row[0].value)
-        subcategories = str(row[1].value)
-        for category in categories.split("-"):
+        georgian_synonyms = row[12].value
+        if georgian_synonyms != None:
+            synonyms = georgian_synonyms.replace("\n", "").split("`")
+            for synonym in synonyms:
+                synonym_term = Term.query.filter(Term.geo_word == synonym.strip()).first()
+                ConnectedTerm(term1_id=new_term.id, term2_id=synonym_term.id, is_synonym=True).create()
+
+        related_words = row[13].value
+        if related_words != None:
+            relations = related_words.replace("\n", "").split("`")
+            for relation in relations:
+                related_term = Term.query.filter(Term.eng_word == relation.strip()).first()
+                ConnectedTerm(term1_id=new_term.id, term2_id=related_term.id, is_synonym=False).create()
+
+        categories = str(row[0].value).replace("\n", "")
+        subcategories = str(row[1].value).replace("\n", "")
+        for category in categories.split("`"):
             category = category.strip()
-            if not category:
+            if not category or category == "None":
                 continue
 
             if category not in existing_categories:
@@ -74,7 +107,7 @@ def populate_db():
         children_subcategories = subcategories.split("|")
         for index, subcategory in enumerate(children_subcategories):
             subcategory = subcategory.strip()
-            if "\n" in subcategory or not subcategory or subcategory == "None":
+            if "`" in subcategory or not subcategory or subcategory == "None":
                 continue
 
             if subcategory not in existing_categories:
@@ -92,7 +125,7 @@ def populate_db():
                 term_category = TermCategory(term_id=new_term.id, category_id=existing_categories[subcategory])
                 term_category.create(commit=False)
 
-        related_subcategories = subcategories.split("-")
+        related_subcategories = subcategories.replace("\n", "").split("`")
         for subcategory in related_subcategories:
             subcategory = subcategory.strip()
             if "|" in subcategory or not subcategory or subcategory == "None":
