@@ -9,14 +9,15 @@
 
     <div class="main-outer edge-padding">
         <main class="main-content width-limiter">
-            <form class="contact-form" id="contact-form" method="POST">
+            <form class="contact-form" id="contact-form" method="POST" novalidate>
                 {{ form.hidden_tag() }}
                 <div class="input-group">
                     {{ form.first_name.label }}
                     <div class="base-field contact-field input-container errorable-field">
                         {{ form.first_name(class="contact-input field-input") }}
+                        <span class="client-field-error"></span>
                         {% if form.first_name.errors %}
-                            <span>{{ form.first_name.errors[0] }}</span>
+                            <span class="server-field-error">{{ form.first_name.errors[0] }}</span>
                         {% endif %}
                     </div>
                 </div>
@@ -24,8 +25,9 @@
                     {{ form.last_name.label }}
                     <div class="base-field contact-field input-container errorable-field">
                         {{ form.last_name(class="contact-input field-input") }}
+                        <span class="client-field-error"></span>
                         {% if form.last_name.errors %}
-                            <span>{{ form.last_name.errors[0] }}</span>
+                            <span class="server-field-error">{{ form.last_name.errors[0] }}</span>
                         {% endif %}
                     </div>
                 </div>
@@ -33,8 +35,9 @@
                     {{ form.email.label }}
                     <div class="base-field contact-field input-container errorable-field">
                         {{ form.email(class="contact-input field-input") }}
+                        <span class="client-field-error"></span>
                         {% if form.email.errors %}
-                            <span>{{ form.email.errors[0] }}</span>
+                            <span class="server-field-error">{{ form.email.errors[0] }}</span>
                         {% endif %}
                     </div>
                 </div>
@@ -42,8 +45,9 @@
                     {{ form.subject.label }}
                     <div class="base-field contact-field input-container errorable-field">
                         {{ form.subject(class="contact-input field-input") }}
+                        <span class="client-field-error"></span>
                         {% if form.subject.errors %}
-                            <span>{{ form.subject.errors[0] }}</span>
+                            <span class="server-field-error">{{ form.subject.errors[0] }}</span>
                         {% endif %}
                     </div>
                 </div>
@@ -51,8 +55,9 @@
                     {{ form.text.label }}
                     <div class="base-field contact-field input-container errorable-field">
                         {{ form.text(class="contact-input field-input") }}
+                        <span class="client-field-error"></span>
                         {% if form.text.errors %}
-                            <span>{{ form.text.errors[0] }}</span>
+                            <span class="server-field-error">{{ form.text.errors[0] }}</span>
                         {% endif %}
                     </div>
                 </div>

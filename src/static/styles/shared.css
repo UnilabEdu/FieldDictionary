@@ -324,6 +324,16 @@
   pointer-events: none;
 }
 
+.abbreviation{
+  text-decoration: none;
+  color: rgb(var(--color-green));
+  cursor: text;
+}
+
+.abbreviation .abbreviation{
+  pointer-events: none;
+}
+
 /*   Closed state of the dialog   */
 dialog {
   display: hidden;
@@ -415,24 +425,18 @@ dialog[open]::backdrop {
   transition: border 250ms ease-out;
 }
 
-.errorable-field.touched:has(.field-input:invalid) {
+.errorable-field:has(.client-field-error.active),
+.errorable-field:has(.server-field-error) {
   border: 1.2px solid rgb(var(--color-red));
+}
+
+.errorable-field:has(.client-field-error.active),
+.errorable-field:has(.server-field-error) {
+  margin-bottom: 20px;
 }
 
 .errorable-field input::placeholder {
   transition: color 250ms ease-out;
-}
-
-.errorable-field.touched:has(.field-input:invalid) .field-input::placeholder {
-  color: rgb(var(--color-red), 0.6);
-}
-
-.errorable-field :is(svg, path) {
-  transition: fill 250ms ease-out;
-}
-
-.errorable-field.touched:has(.field-input:invalid) :is(svg, path) {
-  fill: rgb(var(--color-red));
 }
 
 .errorable-field span {
@@ -442,14 +446,22 @@ dialog[open]::backdrop {
   transform: translateY(100%);
   color: rgb(var(--color-red));
   font-size: 12px;
-  opacity: 0;
-  pointer-events: none;
   transition: opacity 250ms ease-out;
 }
 
-.errorable-field.touched:has(.field-input:invalid) span {
+.client-field-error {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.client-field-error.active {
   opacity: 1;
   pointer-events: all;
+}
+
+.errorable-field:has(.client-field-error.active) .server-field-error{
+  opacity: 0;
+  pointer-events: none;
 }
 
 .input-container :is(input, textarea) {

@@ -25,47 +25,47 @@
                         {% endfor %}
                     </div>
                 {% endfor %}
-                <div class="term-word-type">{{ term.grammar_form }}</div>
+                <div class="term-word-type abbr-support">{{ term.grammar_form }}</div>
                 <div class="term-qualifications">შესაბამისი კვალიფიკაცია</div>
 
                 {% if term.term_source %}
                     <section class="term-source">
                         <h2>ტერმინის წყარო:</h2>
-                        <p> {{ term.term_source|safe }} </p>
+                        <p class="abbr-support"> {{ term.term_source|safe }} </p>
                     </section>
                 {% endif %}
 
                 {# No need to check definition, there will always be one #}
                 <section class="term-definition">
                     <h2>განმარტება:</h2>
-                    <p> {{ term.definition }} </p>
+                    <p class="abbr-support"> {{ term.definition }} </p>
                 </section>
 
                 {% if term.definition_source %}
                     <section class="term-definition-source">
                         <h2>განმარტების წყარო:</h2>
-                        <p> {{ term.definition_source|safe }} </p>
+                        <p class="abbr-support"> {{ term.definition_source|safe }} </p>
                     </section>
                 {% endif %}
 
                 {% if term.term_type %}
                     <section class="term-type">
                         <h2>ტერმინის ტიპი:</h2>
-                        <p>{{ term.term_type }}</p>
+                        <p class="abbr-support">{{ term.term_type }}</p>
                     </section>
                 {% endif %}
 
                 {% if term.context %}
                     <section class="term-context">
                         <h2>კონტექსტი:</h2>
-                        <p> {{ term.context }} </p>
+                        <p class="abbr-support"> {{ term.context }} </p>
                     </section>
                 {% endif %}
 
                 {% if term.context_source %}
                     <section class="term-context-source">
                         <h2>კონტექსტის წყარო:</h2>
-                        <p> {{ term.context_source|safe }} </p>
+                        <p class="abbr-support"> {{ term.context_source|safe }} </p>
                     </section>
                 {% endif %}
 
@@ -111,7 +111,7 @@
                 {% if term.comment %}
                     <section class="term-comment">
                         <h2>კომენტარი:</h2>
-                        <p> {{ term.comment }} </p>
+                        <p class="abbr-support"> {{ term.comment }} </p>
                     </section>
                 {% endif %}
                 <a class="go-back-button-container" href="{{ url_for('main.home') }}">

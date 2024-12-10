@@ -68,8 +68,8 @@
                                 <a href="{{ url_for('main.term_detail', term_id=term.id) }}" class="unstyled-link">
                                     <h3 class="word-pair">{{ term.eng_word }} - {{ term.geo_word }}</h3>
                                 </a>
-                                <span class="word-type">{{ term.grammar_form }}</span>
-                                <p class="term-source">
+                                <span class="word-type abbr-support">{{ term.grammar_form }}</span>
+                                <p class="term-source abbr-support">
                                     <span class="term-source-label">ტერმინის წყარო:</span>
                                     {{ term.term_source | safe }}
                                 </p>
@@ -147,17 +147,17 @@
                                 {% if term.definition %}
                                     <section class="term-group" id="definition-{{ term.id }}">
                                         <h4 class="term-group-title">განმარტება</h4>
-                                        <p class="term-group-text">{{ term.definition }}</p>
+                                        <p class="term-group-text abbr-support">{{ term.definition }}</p>
                                     </section>
                                 {% endif %}
 
                                 {% if term.context %}
                                     <section class="term-group" id="context-{{ term.id }}">
                                         <h4 class="term-group-title">კონტექსტი</h4>
-                                        <p class="term-group-text">{{ term.context }}</p>
+                                        <p class="term-group-text abbr-support">{{ term.context }}</p>
                                         <div class="term-group-sources">
                                             <span class="context-label">კონტექსტის წყარო:</span>
-                                            <div class="term-context-source">
+                                            <div class="term-context-source abbr-support">
                                                 {{ term.context_source | safe }}
                                             </div>
                                         </div>
@@ -200,7 +200,7 @@
                                 {% if term.comment %}
                                     <section class="term-group" id="comment-{{ term.id }}">
                                         <h4 class="term-group-title">კომენტარი</h4>
-                                        <p class="term-group-text">{{ term.comment }}</p>
+                                        <p class="term-group-text abbr-support">{{ term.comment }}</p>
                                     </section>
                                 {% endif %}
                             </article>
