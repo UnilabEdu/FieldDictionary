@@ -25,8 +25,13 @@
                     </div>
                 {% endfor %}
 
-                <div class="term-word-type abbr-support">{{ term.grammar_form }}</div>
-                <div class="term-qualifications"> {{ term.stylistic_label }}</div>
+                {% if term.grammar_form %}
+                    <div class="term-word-type abbr-support">{{ term.grammar_form }}</div>
+                {% endif %}
+
+                {% if term.stylistic_label %}
+                    <div class="term-qualifications"> {{ term.stylistic_label }}</div>
+                {% endif %}
 
                 {% if term.term_source %}
                     <section class="term-source">
@@ -58,7 +63,7 @@
                 {% if term.context %}
                     <section class="term-context">
                         <h2>კონტექსტი:</h2>
-                        <p class="abbr-support"> {{ term.context }} </p>
+                        <p class="abbr-support"> {{ term.context|safe }} </p>
                     </section>
                 {% endif %}
 
@@ -104,7 +109,7 @@
                         <ul>
                             {% for related_term in related_terms %}
                                 <li>
-                                    <a href="{{ url_for('main.term_detail', term_id=related_term.id) }}">{{ related_term.geo_word }}</a>
+                                    <a href="{{ url_for('main.term_detail', term_id=related_term.id) }}">{{ related_term.eng_word }}</a>
                                 </li>
                             {% endfor %}
                         </ul>
