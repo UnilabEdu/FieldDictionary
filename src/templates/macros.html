@@ -64,7 +64,9 @@
             <h3 class="word-pair">{{ term.eng_word }} - {{ term.geo_word }}</h3>
         </a>
 
-        <span class="word-type abbr-support">{{ term.grammar_form }}</span>
+        {% if term.grammar_form %}
+            <span class="word-type abbr-support">{{ term.grammar_form }}</span>
+        {% endif %}
         <p class="term-source abbr-support">
             <span class="term-source-label">ტერმინის წყარო:</span>
             {{ term.term_source | safe }}
