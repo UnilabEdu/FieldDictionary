@@ -193,7 +193,7 @@
                         <div>
                             {% for connected_term in connected_terms %}
                                 <a href="{{ url_for('main.term_detail', term_id=connected_term.id) }}">
-                                    {{ connected_term.geo_word }} {%- if not loop.last -%},{% endif %}
+                                    {{ connected_term.eng_word }} {%- if not loop.last -%},{% endif %}
                                 </a>
                             {% endfor %}
                         </div>
