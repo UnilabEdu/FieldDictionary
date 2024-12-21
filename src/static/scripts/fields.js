@@ -132,7 +132,7 @@ function validateForm() {
         /^[A-Za-z0-9!#$%&'*+\-\/=?^_`{|}~."(),:;<>@[\\\]]+$/,
         "მხოლოდ ინგლისური ასოებია ნებადართული",
       )
-      ?.validateRegex(/@/, 'ელ. ფოსტა უნდა s შეიცავდეს "@" სიმბოლოს')
+      ?.validateRegex(/@/, 'ელ. ფოსტა უნდა შეიცავდეს "@" სიმბოლოს')
       ?.validateLength(5, 50)?.isValid,
     subjectValidator.required()?.validateLength(3, 100),
     textValidator.required(),

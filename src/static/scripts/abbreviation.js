@@ -18,14 +18,17 @@ const abbrs = {
   "შდრ.": "შეადარე - compare",
   "შემოკლ.": "შემოკლებული ფორმა - short form",
   "ჩვეულ.": "ჩვეულებრივ - usually",
-  "ხშ.": "ხშირად - often"
+  "ხშ.": "ხშირად - often",
 };
 
 const elementsWithAbbrs = document.querySelectorAll(".abbr-support");
 
 function unabbreviate(el) {
-  for(const abbr in abbrs){
-    el.innerHTML = el.innerHTML.replaceAll(abbr, `<abbr class="abbreviation" title="${abbrs[abbr]}">${abbr}</abbr>`)
+  for (const abbr in abbrs) {
+    el.innerHTML = el.innerHTML.replaceAll(
+      abbr,
+      `<abbr class="abbreviation" title="${abbrs[abbr]}">${abbr}</abbr>`,
+    );
   }
 }
 
