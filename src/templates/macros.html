@@ -176,11 +176,24 @@
                 {% set connected_terms = term.get_related_terms() %}
                 {% if synonyms %}
                     <div>
-                        <h4 class="term-group-title">სინონიმები</h4>
+                        <h4 class="term-group-title">ქართული სინონიმები</h4>
                         <div>
                             {% for synonym in synonyms %}
                                 <a href="{{ url_for('main.term_detail', term_id=synonym.id) }}">
                                     {{ synonym.geo_word }} {%- if not loop.last -%},{% endif %}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if synonyms %}
+                    <div>
+                        <h4 class="term-group-title">ინგლისური სინონიმები</h4>
+                        <div>
+                            {% for synonym in synonyms %}
+                                <a href="{{ url_for('main.term_detail', term_id=synonym.id) }}">
+                                    {{ synonym.eng_word }} {%- if not loop.last -%},{% endif %}
                                 </a>
                             {% endfor %}
                         </div>

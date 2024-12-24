@@ -10,12 +10,9 @@ searchLetterInput.addEventListener("keyup", searchFilters);
 
 checkboxGroups.forEach((checkboxGroup) => {
   makeFilterToggleable(checkboxGroup); // Make filter subfields togglable
-  makeFiltersDerived(checkboxGroup); // Make connect field and subfield state
 });
 
-// tag derevations are coming from the backend right now, uncommenting would turn on client site derevations,
-// but there is a mismatch of behaviours between them.
-// makeTagsDerived();
+makeTagsDerived();
 makeFiltersResetable();
 searchFilters();
 
@@ -53,59 +50,13 @@ function makeFilterToggleable(checkboxGroup) {
   });
 }
 
-function makeFiltersDerived(checkboxGroup) {
-  const filterCheckbox = checkboxGroup.querySelector(
-    ".checkbox-container > input",
-  );
-
-  const subfilterCheckboxes = checkboxGroup.querySelectorAll(
-    "& > .checkbox-list input",
-  );
-
-  function checkIfAllSubsChecked() {
-    const isEverySubfilterChecked = [...subfilterCheckboxes]
-      .map((x) => x.checked)
-      .every((x) => x);
-
-    if (isEverySubfilterChecked) {
-      filterCheckbox.checked = true;
-    } else {
-      filterCheckbox.checked = false;
-    }
-  }
-
-  subfilterCheckboxes.forEach((subfilterCheckbox) => {
-    subfilterCheckbox.addEventListener("change", () => {
-      checkIfAllSubsChecked();
-      filterCheckbox.dispatchEvent(new Event("update"));
-    });
-
-    subfilterCheckbox.addEventListener("update", () => {
-      checkIfAllSubsChecked();
-      filterCheckbox.dispatchEvent(new Event("update"));
-    });
-  });
-
-  filterCheckbox.addEventListener(
-    "change",
-    (e) => {
-      subfilterCheckboxes.forEach(
-        (checkbox) => (checkbox.checked = e.target.checked),
-      );
-
-      filterCheckbox.dispatchEvent(new Event("update"));
-    },
-    { capture: true },
-  );
-}
-
 function makeTagsDerived() {
   const filterCheckboxes = filterContent.querySelectorAll(
     'input[type="checkbox"]',
   );
 
   filterCheckboxes.forEach((el) =>
-    el.addEventListener("update", setFilterLabels),
+    el.addEventListener("change", setFilterLabels),
   );
 }
 
@@ -144,30 +95,13 @@ function setFilterLabels() {
 }
 
 function getTopLevelFilterData() {
-  const rootCheckboxGroups = filterContent.querySelectorAll(
-    ".checkbox-list.level-1 > .checkbox-group",
+  const checkboxGroups = filterContent.querySelectorAll(
+    ".checkbox-list > .checkbox-group",
   );
 
-  const checkboxData = [];
-  let queue = [...rootCheckboxGroups];
-  let maxIter = 1 << 16;
+  const checkboxData = [...checkboxGroups].map(group=>getCheckboxData(group)) 
 
-  while (queue.length > 0 && maxIter-- > 0) {
-    const currCheckboxGroup = queue.shift();
-    const currCheckboxData = getCheckboxData(currCheckboxGroup);
-
-    if (currCheckboxData.checked) {
-      checkboxData.push(currCheckboxData);
-    } else {
-      const childCheckboxes = currCheckboxGroup.querySelectorAll(
-        "& > .checkbox-list > .checkbox-group",
-      );
-
-      queue = [...queue, ...childCheckboxes];
-    }
-  }
-
-  return checkboxData;
+  return checkboxData.filter(checkbox=>checkbox.checked);
 }
 
 function getCheckboxData(checkboxGroup) {
@@ -192,7 +126,7 @@ function searchFilters() {
 
   matchCount = 0;
   matchChildren(query, rootCheckboxGroups);
-  adjustSearchFieldStyle()
+  adjustSearchFieldStyle();
 }
 
 function recMatchFilter(query, rootEl) {
