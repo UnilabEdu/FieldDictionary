@@ -20,7 +20,7 @@ def home(page=1):
     search_word = request.args.get("searchWord", "")
     if search_word:
         if re.match("[A-Za-z0-9 .]+$", search_word):
-            terms = terms.join(EnglishSynonym).filter(Term.definition.ilike(f"%{search_word}%") | Term.eng_word.ilike(f"%{search_word}%") | EnglishSynonym.eng_word.ilike(f"%{search_word}%"))
+            terms = terms.join(EnglishSynonym, isouter=True).filter(Term.definition.ilike(f"%{search_word}%") | Term.eng_word.ilike(f"%{search_word}%") | EnglishSynonym.eng_word.ilike(f"%{search_word}%"))
         else:
             terms = terms.filter(Term.geo_word.ilike(f"%{search_word}%"))
 
