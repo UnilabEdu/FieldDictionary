@@ -16,17 +16,17 @@ class Term(BaseModel):
     context = db.Column(db.Text, nullable=True)
     context_source = db.Column(db.Text, nullable=True)
     comment = db.Column(db.Text, nullable=True)
-    english_synonyms = db.Column(db.Text, nullable=True)
     stylistic_label = db.Column(db.String(50), nullable=True)
     is_active = db.Column(db.Boolean, default=True)
 
     category = db.relationship("Category", secondary="terms_categories", backref="terms")
+    english_connections = db.relationship("EnglishSynonym", back_populates="term")
 
     def __repr__(self):
         return f"({self.eng_word} - {self.geo_word})"
 
-    def get_synonyms(self):
-        connections = ConnectedTerm.query.filter(ConnectedTerm.is_synonym == True, (ConnectedTerm.term1_id == self.id) | (ConnectedTerm.term2_id == self.id)).all()
+    def get_synonyms(self, is_english=False):
+        connections = ConnectedTerm.query.filter(ConnectedTerm.is_synonym == True, (ConnectedTerm.term1_id == self.id) | (ConnectedTerm.term2_id == self.id), ConnectedTerm.is_english == is_english).all()
         synonym_ids = [connection.term1_id if connection.term1_id != self.id else connection.term2_id for connection in connections]
         synonyms = Term.query.filter(Term.id.in_(synonym_ids)).all()
         return synonyms
@@ -36,6 +36,10 @@ class Term(BaseModel):
         connected_term_ids = [connection.term1_id if connection.term1_id != self.id else connection.term2_id for connection in connections]
         related_terms = Term.query.filter(Term.id.in_(connected_term_ids)).all()
         return related_terms
+
+    def get_english_synonyms(self):
+        english_synonyms = EnglishSynonym.query.filter((ConnectedTerm.term1_id == self.id) | (ConnectedTerm.term2_id == self.id)).all()
+        return english_synonyms
 
     def has_synonyms_or_relations(self):
         connections = ConnectedTerm.query.filter((ConnectedTerm.term1_id == self.id) | (ConnectedTerm.term2_id == self.id)).first()
@@ -66,6 +70,7 @@ class ConnectedTerm(BaseModel):
     term1_id = db.Column(db.Integer, db.ForeignKey('terms.id'), nullable=True)
     term2_id = db.Column(db.Integer, db.ForeignKey('terms.id'), nullable=True)
     is_synonym = db.Column(db.Boolean, nullable=False, default=False)
+    is_english = db.Column(db.Boolean, nullable=False, default=False)
 
     term1 = db.relationship('Term', foreign_keys=[term1_id])
     term2 = db.relationship('Term', foreign_keys=[term2_id])
@@ -73,6 +78,19 @@ class ConnectedTerm(BaseModel):
 
     def __repr__(self):
         return f"{self.term1} - {self.term2}"
+
+
+class EnglishSynonym(BaseModel):
+    __tablename__ = "english_synonyms"
+
+    id = db.Column(db.Integer, primary_key=True)
+    eng_word = db.Column(db.String, nullable=False)
+    term_id = db.Column(db.Integer, db.ForeignKey('terms.id'), nullable=True)
+
+    term = db.relationship('Term', back_populates="english_connections")
+
+    def __repr__(self):
+        return f"{self.eng_word} = {self.term}"
 
 
 class Category(BaseModel):

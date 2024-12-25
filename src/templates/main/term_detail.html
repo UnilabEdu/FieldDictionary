@@ -91,13 +91,19 @@
                     </section>
                 {% endif %}
 
-                {% if term.english_synonyms %}
+                {% set english_synonyms = term.get_synonyms(is_english=True) %}
+                {% if english_synonyms %}
                     <section class="term-synonyms">
                         <h2>ინგლისური სინონიმები:</h2>
                         <ul>
-                            <li>
-                                {{ term.english_synonyms }}
-                            </li>
+                            {% for synonym in english_synonyms %}
+                                <li>
+                                    <a href="{{ url_for('main.term_detail', term_id=synonym.id) }}">{{ synonym.eng_word }}</a>
+                                    {%- if not loop.last -%}
+                                        ,
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
                         </ul>
                     </section>
                 {% endif %}

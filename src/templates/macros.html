@@ -173,6 +173,7 @@
         {% if term.has_synonyms_or_relations() %}
             <section class="term-group" id="connected-{{ term.id }}">
                 {% set synonyms = term.get_synonyms() %}
+                {% set english_synonyms = term.get_synonyms(is_english=True) %}
                 {% set connected_terms = term.get_related_terms() %}
                 {% if synonyms %}
                     <div>
@@ -187,11 +188,11 @@
                     </div>
                 {% endif %}
 
-                {% if synonyms %}
+                {% if english_synonyms %}
                     <div>
                         <h4 class="term-group-title">ინგლისური სინონიმები</h4>
                         <div>
-                            {% for synonym in synonyms %}
+                            {% for synonym in english_synonyms %}
                                 <a href="{{ url_for('main.term_detail', term_id=synonym.id) }}">
                                     {{ synonym.eng_word }} {%- if not loop.last -%},{% endif %}
                                 </a>
@@ -222,4 +223,17 @@
             </section>
         {% endif %}
     </article>
+
+    {% if term.english_connections %}
+        {% for english_synonym in term.english_connections %}
+            <article class="term-card">
+                <div class="pair-line">
+                    <h3 class="word-pair">{{ english_synonym.eng_word }}</h3>
+                    <span class="equivalent-word">
+                        = <a href="{{ url_for('main.term_detail', term_id=english_synonym.term.id) }}">{{ english_synonym.term.eng_word }}</a>
+                    </span>
+                </div>
+            </article>
+        {% endfor %}
+    {% endif %}
 {% endmacro %}

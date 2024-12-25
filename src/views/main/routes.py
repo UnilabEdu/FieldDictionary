@@ -4,7 +4,7 @@ from urllib.parse import unquote
 from sqlalchemy import func
 import re
 
-from src.models import Term, Category, User, About
+from src.models import Term, Category, User, About, EnglishSynonym
 from src.views.main.forms import LoginForm, ContactForm
 
 main_blueprint = Blueprint("main", __name__)
@@ -20,7 +20,7 @@ def home(page=1):
     search_word = request.args.get("searchWord", "")
     if search_word:
         if re.match("[A-Za-z0-9 .]+$", search_word):
-            terms = terms.filter(Term.definition.ilike(f"%{search_word}%") | Term.eng_word.ilike(f"%{search_word}%") | Term.english_synonyms.ilike(f"%{search_word}%"))
+            terms = terms.join(EnglishSynonym).filter(Term.definition.ilike(f"%{search_word}%") | Term.eng_word.ilike(f"%{search_word}%") | EnglishSynonym.eng_word.ilike(f"%{search_word}%"))
         else:
             terms = terms.filter(Term.geo_word.ilike(f"%{search_word}%"))
 

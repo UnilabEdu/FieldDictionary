@@ -55,7 +55,6 @@ class TermView(SecureModelView):
         "comment",
         "category",
         "synonyms",
-        "english_synonyms",
     ]
 
     column_sortable_list = [
@@ -82,7 +81,6 @@ class TermView(SecureModelView):
         "comment": "კომენტარი",
         "category": "კატეგორია",
         "synonyms": "სინონიმები",
-        "english_synonyms": "ინგლისური სინონიმები",
         "connected_terms": "დაკავშირებული სიტყვები",
         "is_active": "აქტიური"
     }
@@ -107,7 +105,6 @@ class TermView(SecureModelView):
         "comment",
         "category",
         "synonyms_field",
-        "english_synonyms",
         "connections_field",
         "is_active"
     ]

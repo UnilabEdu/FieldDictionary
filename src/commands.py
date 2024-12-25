@@ -8,7 +8,7 @@ from openpyxl.cell.rich_text import CellRichText
 
 from src.config import Config
 from src.extensions import db
-from src.models import Term, TermCategory, Category, ConnectedTerm, User
+from src.models import Term, TermCategory, Category, ConnectedTerm, User, EnglishSynonym
 
 
 @click.command("init_db")
@@ -52,12 +52,9 @@ def populate_db():
             return text
 
         if "=" in row[3].value:
-            existing_term = Term.query.filter(Term.eng_word == row[3].value.replace("=", "").strip()).first()
-            if existing_term.english_synonyms:
-                existing_term.english_synonyms += f", {row[3].value.replace('=', '').strip()}"
-            else:
-                existing_term.english_synonyms = row[3].value.replace("=", "").strip()
-            existing_term.save()
+            word = row[3].value.replace("=", "").strip()
+            existing_term = Term.query.filter(Term.eng_word == word).first()
+            EnglishSynonym(eng_word=row[2].value.strip(), term_id=existing_term.id).create()
             continue
 
         term_source = rich_to_html(row[6])
@@ -79,6 +76,13 @@ def populate_db():
             for synonym in synonyms:
                 synonym_term = Term.query.filter(Term.geo_word == synonym.strip()).first()
                 ConnectedTerm(term1_id=new_term.id, term2_id=synonym_term.id, is_synonym=True).create()
+
+        english_synonyms = row[11].value
+        if english_synonyms != None:
+            synonyms = english_synonyms.replace("\n", "").split("`")
+            for synonym in synonyms:
+                synonym_term = Term.query.filter(Term.eng_word == synonym.strip()).first()
+                ConnectedTerm(term1_id=new_term.id, term2_id=synonym_term.id, is_synonym=True, is_english=True).create()
 
         related_words = row[13].value
         if related_words != None:
