@@ -30,6 +30,18 @@ class CategoryView(SecureModelView):
     column_filters = ['name', 'is_active']
 
 
+class EnglishTermView(SecureModelView):
+    column_labels = {
+        "eng_word": "ტერმინი",
+        "term": "ინგლისური სინონიმი"
+    }
+
+    column_list = ["eng_word", "term"]
+    form_columns = column_list
+
+    column_searchable_list = ("eng_word",)
+
+
 class TermView(SecureModelView):
     can_view_details = True
     can_create = True
@@ -105,12 +117,14 @@ class TermView(SecureModelView):
         "comment",
         "category",
         "synonyms_field",
+        "eng_synonyms_field",
         "connections_field",
         "is_active"
     ]
 
     form_extra_fields = {"connections_field": QuerySelectMultipleField("დაკავშრებული სიტყვები", query_factory=lambda: Term.query),
-                         "synonyms_field": QuerySelectMultipleField("სინონიმები", query_factory=lambda: Term.query)}
+                         "synonyms_field": QuerySelectMultipleField("ქართული სინონიმები", query_factory=lambda: Term.query),
+                         "eng_synonyms_field": QuerySelectMultipleField("ინგლისური სინონიმები", query_factory=lambda: Term.query)}
 
     def create_model(self, form):
         try:
@@ -120,6 +134,9 @@ class TermView(SecureModelView):
 
             for related_term_id in form.connections_field.raw_data:
                 ConnectedTerm(term1_id=model.id, term2_id=related_term_id, is_synonym=True).create(commit=False)
+
+            for eng_synonym_id in form.synonyms_field.raw_data:
+                ConnectedTerm(term1_id=model.id, term2_id=eng_synonym_id, is_synonym=True, is_english=True).create(commit=False)
 
             model.save()
             self._on_model_change(form, model, True)
@@ -134,47 +151,41 @@ class TermView(SecureModelView):
         return model
 
     def update_model(self, form, model):
+        def update_connected_terms(existing_term_ids, field_term_ids, is_synonym, is_english):
+            removed_terms = existing_term_ids.difference(field_term_ids)
+            added_terms = field_term_ids.difference(existing_term_ids)
+
+            for term_id in added_terms:
+                if term_id != model.id and term_id not in existing_term_ids:
+                    ConnectedTerm(term1_id=model.id, term2_id=term_id, is_synonym=False).create(commit=False)
+
+            if removed_terms:
+                ConnectedTerm.query.filter(ConnectedTerm.term1_id.in_(removed_terms),
+                                           ConnectedTerm.term2_id == model.id,
+                                           ConnectedTerm.is_synonym == is_synonym,
+                                           ConnectedTerm.is_english == is_english).delete()
+
+                ConnectedTerm.query.filter(ConnectedTerm.term2_id.in_(removed_terms),
+                                           ConnectedTerm.term1_id == model.id,
+                                           ConnectedTerm.is_synonym == is_synonym,
+                                           ConnectedTerm.is_english == is_english).delete()
+
+
         try:
             if form.connections_field.data:
                 related_term_ids = {term.id for term in model.get_related_terms()}
                 field_term_ids = {int(term_id) for term_id in form.connections_field.raw_data}
-
-                removed_terms = related_term_ids.difference(field_term_ids)
-                added_terms = field_term_ids.difference(related_term_ids)
-
-                for term_id in added_terms:
-                    if term_id != model.id and term_id not in related_term_ids:
-                        ConnectedTerm(term1_id=model.id, term2_id=term_id, is_synonym=False).create(commit=False)
-
-                if removed_terms:
-                    ConnectedTerm.query.filter(ConnectedTerm.term1_id.in_(removed_terms),
-                                               ConnectedTerm.term2_id == model.id,
-                                               ConnectedTerm.is_synonym == False).delete()
-
-                    ConnectedTerm.query.filter(ConnectedTerm.term2_id.in_(removed_terms),
-                                               ConnectedTerm.term1_id == model.id,
-                                               ConnectedTerm.is_synonym == False).delete()
-
+                update_connected_terms(related_term_ids, field_term_ids, False, False)
 
             if form.synonyms_field.data:
                 synonym_ids = {term.id for term in model.get_synonyms()}
                 field_term_ids = {int(term_id) for term_id in form.synonyms_field.raw_data}
+                update_connected_terms(synonym_ids, field_term_ids, True, False)
 
-                removed_terms = synonym_ids.difference(field_term_ids)
-                added_terms = field_term_ids.difference(synonym_ids)
-
-                for term_id in added_terms:
-                    if term_id != model.id and term_id not in synonym_ids:
-                        ConnectedTerm(term1_id=model.id, term2_id=term_id, is_synonym=True).create(commit=False)
-
-                if removed_terms:
-                    ConnectedTerm.query.filter(ConnectedTerm.term1_id.in_(removed_terms),
-                                               ConnectedTerm.term2_id == model.id,
-                                               ConnectedTerm.is_synonym == True).delete()
-
-                    ConnectedTerm.query.filter(ConnectedTerm.term2_id.in_(removed_terms),
-                                               ConnectedTerm.term1_id == model.id,
-                                               ConnectedTerm.is_synonym == True).delete()
+            if form.eng_synonyms_field.data:
+                synonym_ids = {term.id for term in model.get_synonyms(is_english=True)}
+                field_term_ids = {int(term_id) for term_id in form.synonyms_field.raw_data}
+                update_connected_terms(synonym_ids, field_term_ids, True, True)
 
             model.save()
             super().update_model(form, model)
@@ -189,12 +200,15 @@ class TermView(SecureModelView):
         model = Term.query.get(id)
 
         synonyms = [synonym for synonym in model.get_synonyms()]
+        eng_synonyms = [synonym for synonym in model.get_synonyms(is_english=True)]
         related_words = [related_word for related_word in model.get_related_terms()]
 
         form.connections_field.default = related_words
         form.synonyms_field.default = synonyms
+        form.eng_synonyms_field.default = eng_synonyms
         form.connections_field.process(None, related_words or unset_value)
         form.synonyms_field.process(None, synonyms or unset_value)
+        form.eng_synonyms_field.process(None, eng_synonyms or unset_value)
 
         super().on_form_prefill(form, id)
 

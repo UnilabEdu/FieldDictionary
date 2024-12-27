@@ -1,6 +1,8 @@
 from flask_admin import Admin
-from src.admin.base import SecureIndexView
-from src.admin.base import LogoutMenuLink
+from src.admin.base import SecureIndexView, LogoutMenuLink
+from src.admin.term import EnglishTermView, TermView, CategoryView
+from src.admin.user import UserView
+from src.admin.about import AboutView
 
 
 

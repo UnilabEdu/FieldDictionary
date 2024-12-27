@@ -23,7 +23,7 @@ class Term(BaseModel):
     english_connections = db.relationship("EnglishSynonym", back_populates="term")
 
     def __repr__(self):
-        return f"({self.eng_word} - {self.geo_word})"
+        return f"{self.id}.{self.eng_word} - {self.geo_word}"
 
     def get_synonyms(self, is_english=False):
         connections = ConnectedTerm.query.filter(ConnectedTerm.is_synonym == True, (ConnectedTerm.term1_id == self.id) | (ConnectedTerm.term2_id == self.id), ConnectedTerm.is_english == is_english).all()
