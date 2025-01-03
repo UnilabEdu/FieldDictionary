@@ -324,13 +324,14 @@
   pointer-events: none;
 }
 
-.abbreviation{
+.abbreviation {
   text-decoration: none;
+  font-style: italic;
   color: rgb(var(--color-green));
   cursor: text;
 }
 
-.abbreviation .abbreviation{
+.abbreviation .abbreviation {
   pointer-events: none;
 }
 
@@ -459,7 +460,7 @@ dialog[open]::backdrop {
   pointer-events: all;
 }
 
-.errorable-field:has(.client-field-error.active) .server-field-error{
+.errorable-field:has(.client-field-error.active) .server-field-error {
   opacity: 0;
   pointer-events: none;
 }
