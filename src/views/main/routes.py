@@ -47,7 +47,7 @@ def home(page=1):
     terms = terms.paginate(per_page=5, page=page)
     return render_template("main/main.html", terms=terms,
                            root_categories=root_categories, filtered_categories=filtered_categories,
-                           search_word=search_word, search_letter=search_letter, items=items)
+                           search_word=search_word, search_letter=search_letter, items=items, sort=sort)
 
 
 @main_blueprint.route("/about")
