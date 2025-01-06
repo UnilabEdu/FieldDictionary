@@ -157,7 +157,7 @@ class TermView(SecureModelView):
 
             for term_id in added_terms:
                 if term_id != model.id and term_id not in existing_term_ids:
-                    ConnectedTerm(term1_id=model.id, term2_id=term_id, is_synonym=False).create(commit=False)
+                    ConnectedTerm(term1_id=model.id, term2_id=term_id, is_synonym=is_synonym).create(commit=False)
 
             if removed_terms:
                 ConnectedTerm.query.filter(ConnectedTerm.term1_id.in_(removed_terms),
@@ -184,7 +184,7 @@ class TermView(SecureModelView):
 
             if form.eng_synonyms_field.data:
                 synonym_ids = {term.id for term in model.get_synonyms(is_english=True)}
-                field_term_ids = {int(term_id) for term_id in form.synonyms_field.raw_data}
+                field_term_ids = {int(term_id) for term_id in form.eng_synonyms_field.raw_data}
                 update_connected_terms(synonym_ids, field_term_ids, True, True)
 
             model.save()
