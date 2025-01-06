@@ -130,12 +130,12 @@ class TermView(SecureModelView):
         try:
             model = self.build_new_instance()
             for synonym_id in form.synonyms_field.raw_data:
-                ConnectedTerm(term1_id=model.id, term2_id=synonym_id, is_synonym=True).create(commit=False)
+                ConnectedTerm(term1_id=model.id, term2_id=synonym_id, is_synonym=True, is_english=False).create(commit=False)
 
             for related_term_id in form.connections_field.raw_data:
-                ConnectedTerm(term1_id=model.id, term2_id=related_term_id, is_synonym=True).create(commit=False)
+                ConnectedTerm(term1_id=model.id, term2_id=related_term_id, is_synonym=False, is_english=False).create(commit=False)
 
-            for eng_synonym_id in form.synonyms_field.raw_data:
+            for eng_synonym_id in form.eng_synonyms_field.raw_data:
                 ConnectedTerm(term1_id=model.id, term2_id=eng_synonym_id, is_synonym=True, is_english=True).create(commit=False)
 
             model.save()
@@ -157,7 +157,7 @@ class TermView(SecureModelView):
 
             for term_id in added_terms:
                 if term_id != model.id and term_id not in existing_term_ids:
-                    ConnectedTerm(term1_id=model.id, term2_id=term_id, is_synonym=is_synonym).create(commit=False)
+                    ConnectedTerm(term1_id=model.id, term2_id=term_id, is_synonym=is_synonym, is_english=is_english).create(commit=False)
 
             if removed_terms:
                 ConnectedTerm.query.filter(ConnectedTerm.term1_id.in_(removed_terms),
