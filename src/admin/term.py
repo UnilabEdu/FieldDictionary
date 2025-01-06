@@ -172,20 +172,20 @@ class TermView(SecureModelView):
 
 
         try:
-            if form.connections_field.data:
-                related_term_ids = {term.id for term in model.get_related_terms()}
-                field_term_ids = {int(term_id) for term_id in form.connections_field.raw_data}
-                update_connected_terms(related_term_ids, field_term_ids, False, False)
+            # Connected Terms
+            related_term_ids = {term.id for term in model.get_related_terms()}
+            field_term_ids = {int(term_id) for term_id in form.connections_field.raw_data}
+            update_connected_terms(related_term_ids, field_term_ids, False, False)
 
-            if form.synonyms_field.data:
-                synonym_ids = {term.id for term in model.get_synonyms()}
-                field_term_ids = {int(term_id) for term_id in form.synonyms_field.raw_data}
-                update_connected_terms(synonym_ids, field_term_ids, True, False)
+            # Georgian Synonyms
+            synonym_ids = {term.id for term in model.get_synonyms()}
+            field_term_ids = {int(term_id) for term_id in form.synonyms_field.raw_data}
+            update_connected_terms(synonym_ids, field_term_ids, True, False)
 
-            if form.eng_synonyms_field.data:
-                synonym_ids = {term.id for term in model.get_synonyms(is_english=True)}
-                field_term_ids = {int(term_id) for term_id in form.eng_synonyms_field.raw_data}
-                update_connected_terms(synonym_ids, field_term_ids, True, True)
+            # English Synonyms
+            synonym_ids = {term.id for term in model.get_synonyms(is_english=True)}
+            field_term_ids = {int(term_id) for term_id in form.eng_synonyms_field.raw_data}
+            update_connected_terms(synonym_ids, field_term_ids, True, True)
 
             model.save()
             super().update_model(form, model)
