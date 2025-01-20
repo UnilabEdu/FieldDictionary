@@ -3,6 +3,7 @@ from flask.cli import with_appcontext
 import click
 from openpyxl import load_workbook
 from os import path
+from csv import reader
 
 from openpyxl.cell.rich_text import CellRichText
 
@@ -23,6 +24,19 @@ def init_db():
 @click.command("populate_db")
 @with_appcontext
 def populate_db():
+    click.echo("Creating categories")
+    filepath = path.join(Config.BASE_DIRECTORY, "dargebi.csv")
+    with open(path.join(path.dirname(__file__), filepath), encoding='utf-8') as csv:
+        csv_reader = reader(csv, delimiter=",")
+        next(csv_reader)  # Skip the headers row
+        for row in csv_reader:
+            new_category = Category(name=row[1].strip())
+            if int(row[2]) != 0:
+                new_category.parent_id = row[2]
+            db.session.add(new_category)
+        db.session.commit()
+
+
     filepath = path.join(Config.BASE_DIRECTORY, "IATGE2.xlsx")
     workbook = load_workbook(filepath, rich_text=True)
     worksheet = workbook.worksheets[0]
