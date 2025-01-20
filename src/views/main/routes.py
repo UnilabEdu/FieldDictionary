@@ -6,6 +6,7 @@ import re
 
 from src.models import Term, Category, User, About, EnglishSynonym
 from src.views.main.forms import LoginForm, ContactForm
+from src.utils import send_email
 
 main_blueprint = Blueprint("main", __name__)
 
@@ -67,6 +68,17 @@ def contact():
         flash("გთხოვთ შეავსოთ ყველა ველი სწორად.", "error")
 
     return render_template("main/contact.html", items=items, form=form)
+
+
+@main_blueprint.route("/send_email", methods=["POST"])
+def send_mail():
+    form = ContactForm()
+    if form.validate_on_submit():
+        send_email(f"{form.subject.data}", f"{form.text.data}<br><br>{form.first_name.data} {form.last_name.data}<br>{form.email.data}")
+        return "Success", 200
+    else:
+        print("Send mail error: ", form.errors)
+        return "Fail", 400
 
 
 @main_blueprint.route("/term_detail/<int:term_id>")

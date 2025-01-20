@@ -2,7 +2,7 @@ from flask import Flask
 from werkzeug import serving
 
 from src.config import Config
-from src.extensions import db, migrate, login_manager, ckeditor
+from src.extensions import db, migrate, login_manager, ckeditor, mail
 from src.views import main_blueprint
 from src.admin import admin, TermView, CategoryView, UserView, AboutView, EnglishTermView
 from src.commands import init_db, populate_db
@@ -39,6 +39,9 @@ def register_extensions(app):
 
     # CKEditor
     ckeditor.init_app(app)
+
+    # Mail
+    mail.init_app(app)
 
     @login_manager.user_loader
     def load_user(user_id):

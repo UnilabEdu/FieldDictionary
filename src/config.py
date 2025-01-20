@@ -1,5 +1,4 @@
-from os import path
-
+from os import path, environ
 
 
 class Config:
@@ -7,3 +6,10 @@ class Config:
     SECRET_KEY = "abhdlhrjekls75akkjlllakqawash"
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + path.join(BASE_DIRECTORY, "database.db")
     UPLOAD_PATH = path.join(BASE_DIRECTORY, "static", "images")
+
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 587
+    MAIL_USERNAME = environ.get("DB_USER")
+    MAIL_PASSWORD = environ.get("DB_PASS")
+    MAIL_USE_TLS = True
+    MAIL_USE_SSL = False
