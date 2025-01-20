@@ -9,7 +9,7 @@ class Config:
 
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 587
-    MAIL_USERNAME = environ.get("DB_USER")
-    MAIL_PASSWORD = environ.get("DB_PASS")
+    MAIL_USERNAME = environ.get("MAIL_USER")
+    MAIL_PASSWORD = environ.get("MAIL_PASS")
     MAIL_USE_TLS = True
     MAIL_USE_SSL = False
