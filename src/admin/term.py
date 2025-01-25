@@ -27,7 +27,7 @@ class CategoryView(SecureModelView):
     column_searchable_list = ['name']
     column_sortable_list = ['name']
     column_default_sort = ('name', False)
-    column_filters = ['name', 'is_active']
+    column_filters = ['is_active']
 
 
 class EnglishTermView(SecureModelView):
