@@ -15,7 +15,7 @@ main_blueprint = Blueprint("main", __name__)
 @main_blueprint.route("/page/<int:page>")
 def home(page=1):
     items = About.query.all()
-    root_categories = Category.query.filter(Category.parent_id.is_(None), Category.is_active == True).all()
+    root_categories = Category.query.filter(Category.parent_id.is_(None), Category.is_active == True).order_by(Category.name).all()
     filtered_categories = []
     terms = Term.query.filter(Term.is_active == True, Term.category.any(Category.is_active == True))
     search_word = request.args.get("searchWord", "")

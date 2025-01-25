@@ -128,7 +128,7 @@
                         <p class="abbr-support"> {{ term.comment }} </p>
                     </section>
                 {% endif %}
-                <a class="go-back-button-container" href="{{ url_for('main.home') }}">
+                <a class="go-back-button-container" onclick="return window.history.back()">
                     <button type="button" class="go-back-button">
                         <img src="{{ url_for('static', filename='images/' + 'go-back.svg') }}" alt="Go back"/>
                     </button>
