@@ -67,10 +67,14 @@
         {% if term.grammar_form %}
             <span class="word-type abbr-support">{{ term.grammar_form }}</span>
         {% endif %}
-        <p class="term-source abbr-support">
-            <span class="term-source-label">ტერმინის წყარო:</span>
-            {{ term.term_source | safe }}
-        </p>
+        <div class="term-source abbr-support">
+            <div class="term-group-sources">
+                <span class="term-source-label">ტერმინის წყარო:</span>
+                <div class="term-context-source">
+                    {{ term.term_source | safe }}
+                </div>
+            </div>
+        </div>
 
         <section class="term-controls">
             <button class="term-button definition-button" title="განმარტების ჩვენება"
@@ -230,7 +234,8 @@
                 <div class="pair-line">
                     <h3 class="word-pair">{{ english_synonym.eng_word }}</h3>
                     <span class="equivalent-word">
-                        = <a href="{{ url_for('main.term_detail', term_id=english_synonym.term.id) }}">{{ english_synonym.term.eng_word }}</a>
+                        = <a
+                            href="{{ url_for('main.term_detail', term_id=english_synonym.term.id) }}">{{ english_synonym.term.eng_word }}</a>
                     </span>
                 </div>
             </article>
