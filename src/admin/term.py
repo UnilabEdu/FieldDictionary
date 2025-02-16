@@ -131,6 +131,11 @@ class TermView(SecureModelView):
     def create_model(self, form):
         try:
             model = self.build_new_instance()
+            form.populate_obj(model)
+            self.session.add(model)
+            self._on_model_change(form, model, True)
+            self.session.commit()
+
             for synonym_id in form.synonyms_field.raw_data:
                 ConnectedTerm(term1_id=model.id, term2_id=synonym_id, is_synonym=True, is_english=False).create(commit=False)
 
@@ -139,17 +144,15 @@ class TermView(SecureModelView):
 
             for eng_synonym_id in form.eng_synonyms_field.raw_data:
                 ConnectedTerm(term1_id=model.id, term2_id=eng_synonym_id, is_synonym=True, is_english=True).create(commit=False)
-
-            model.save()
-            self._on_model_change(form, model, True)
             self.session.commit()
         except Exception as ex:
             if not self.handle_view_exception(ex):
                 flash(f'Failed to create record. {str(ex)}s', 'error')
             self.session.rollback()
             return False
+        else:
+            self.after_model_change(form, model, True)
 
-        super().create_model(form)
         return model
 
     def update_model(self, form, model):
