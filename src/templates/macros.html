@@ -192,14 +192,21 @@
                     </div>
                 {% endif %}
 
-                {% if english_synonyms %}
+                {% if english_synonyms or term.english_connections %}
+                    {% set english_synonyms = english_synonyms + term.english_connections %}
                     <div>
                         <h4 class="term-group-title">ინგლისური სინონიმები</h4>
                         <div>
                             {% for synonym in english_synonyms %}
-                                <a href="{{ url_for('main.term_detail', term_id=synonym.id) }}">
-                                    {{ synonym.eng_word }} {%- if not loop.last -%},{% endif %}
-                                </a>
+                                {%- if synonym.geo_word is defined -%}
+                                    <a href="{{ url_for('main.term_detail', term_id=synonym.id) }}">{{ synonym.eng_word }}</a>
+                                {%- else -%}
+                                    {{- synonym.eng_word -}}
+                                {% endif %}
+
+                                {%- if not loop.last -%}
+                                    ,
+                                {% endif %}
                             {% endfor %}
                         </div>
                     </div>

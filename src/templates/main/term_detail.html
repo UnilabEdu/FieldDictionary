@@ -92,13 +92,18 @@
                 {% endif %}
 
                 {% set english_synonyms = term.get_synonyms(is_english=True) %}
-                {% if english_synonyms %}
+                {% if english_synonyms or term.english_connections %}
+                    {% set english_synonyms = english_synonyms + term.english_connections %}
                     <section class="term-synonyms">
                         <h2>ინგლისური სინონიმები:</h2>
                         <ul>
                             {% for synonym in english_synonyms %}
                                 <li>
-                                    <a href="{{ url_for('main.term_detail', term_id=synonym.id) }}">{{ synonym.eng_word }}</a>
+                                    {%- if synonym.geo_word is defined -%}
+                                        <a href="{{ url_for('main.term_detail', term_id=synonym.id) }}">{{ synonym.eng_word }}</a>
+                                    {%- else -%}
+                                        {{- synonym.eng_word -}}
+                                    {% endif %}
                                     {%- if not loop.last -%}
                                         ,
                                     {% endif %}

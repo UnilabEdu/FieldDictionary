@@ -43,7 +43,7 @@ class Term(BaseModel):
 
     def has_synonyms_or_relations(self):
         connections = ConnectedTerm.query.filter((ConnectedTerm.term1_id == self.id) | (ConnectedTerm.term2_id == self.id)).first()
-        return connections != None
+        return connections is not None or len(self.english_connections) != 0
 
     def get_category_tree(self):
         category_trees = []
@@ -60,7 +60,6 @@ class Term(BaseModel):
                     current_dict[category] = {}
                 current_dict = current_dict[category]
         return branched_tree
-
 
 
 class ConnectedTerm(BaseModel):
