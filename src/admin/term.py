@@ -98,8 +98,10 @@ class TermView(SecureModelView):
     }
 
     form_overrides = {
+        'context': CKEditorField,
         'context_source': CKEditorField,
         'term_source': CKEditorField,
+        'definition': CKEditorField,
         'definition_source': CKEditorField,
     }
 
