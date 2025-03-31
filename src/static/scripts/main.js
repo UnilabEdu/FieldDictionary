@@ -90,6 +90,11 @@ function search() {
 
 searchButton.addEventListener("click", search)
 searchButton2.addEventListener("click", search)
+searchWord.addEventListener("keypress", (e) => {
+    if (e.key === 'Enter') {
+        search()
+    }
+})
 
 let categoryRemoveButtons = document.getElementsByClassName("selected-filter-remove-button")
 for (let button of categoryRemoveButtons) {
